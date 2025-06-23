@@ -5,22 +5,15 @@
 %% For further assistance please contact Copernicus Publications at: production@copernicus.org
 %% https://publications.copernicus.org/for_authors/manuscript_preparation.html
 
-
-
-
-
 %% Please use the following documentclass and journal abbreviations for preprints and final revised papers.
 
 %% 2-column papers and preprints
 \documentclass[hess, manuscript]{copernicus}
 
-
 %\usepackage{graphics} % scalebox
 \usepackage{booktabs} % toprule, bottomrule
 
-
 %% Journal abbreviations (please use the same for preprints and final revised papers)
-
 
 % Advances in Geosciences (adgeo)
 % Advances in Radio Science (ars)
@@ -69,7 +62,6 @@
 % Web Ecology (we)
 % Wind Energy Science (wes)
 
-
 %% \usepackage commands included in the copernicus.cls:
 %\usepackage[german, english]{babel}
 %\usepackage{tabularx}
@@ -83,12 +75,10 @@
 %\usepackage{subfig}
 %\usepackage{rotating}
 
-
 \begin{document}
 
-\title{"Título de mi proyecto" \\
-	Proyecto Final - Informe de Avance XX}
-
+\title{"Use of machine learning models for flow rate prediction in the Cautín River through R" \\
+Proyecto Final - Informe de Avance 03}
 
 % \Author[affil]{given_name}{surname}
 
@@ -97,13 +87,10 @@
 
 %\affil[]{ADDRESS}
 
-\Author[1][correoDelLider@ufromail.cl]{Nombre1}{Apellido11 Apellido12}
-\affil[1]{Curso IIO222, 2025-S1, Informe de Avance XX, Equipo YY}
+\Author[1][r.cano01@ufromail.cl]{Rocío}{Cano Manzano}
+\affil[1]{Curso IIO222, 2025-S1, Informe de Avance 03, Equipo 07}
 
-\Author[1]{Nombre2}{Apellido21 Apellido22}
-
-
-
+\Author[1]{Gadiel}{Sepúlveda Aguilera}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
@@ -111,14 +98,9 @@
 
 %% If authors contributed equally, please mark the respective author names with an asterisk, e.g. "\Author[2,*]{Anton}{Smith}" and "\Author[3,*]{Bradley}{Miller}" and add a further affiliation: "\affil[*]{These authors contributed equally to this work.}".
 
-
 \runningtitle{TEXT}
 
 \runningauthor{TEXT}
-
-
-
-
 
 \received{}
 \pubdiscuss{} %% only important for two-stage journals
@@ -128,54 +110,53 @@
 
 %% These dates will be inserted by Copernicus Publications during the typesetting process.
 
-
 \firstpage{1}
 
 \maketitle
 
-
-
 \begin{abstract}
-Resumen
+  River floods have posed an ongoing risk for cities and communities nearby. The Cautín River, on the Araucania Region, Chile, has shown a surge in flood events, affecting particularly vulnerable zones, and future phenomena are expected to cause higher damage due to climate change. Therefore, the devolpment and usage of early warning systems is crucial to reduce their cost and impact. Over the last few years, an increasing amount of resources have been invested on machine learning models for forecasting, which promise accurate results with little computational effort, as research shows. The following work aims to evaluate the accuracy of river flow forecasting on a single gauge at the Cautín catchment area, based on river flow and precipitation information using three different models: xgboost, LSTM and random forests. At the moment of writing, no previous works have studied these models on the aforementioned zone; so the results of this endeavor, once completed, will offer valuable insights for the implementation of early warning systems, thus potentially improving response to future events.
 \end{abstract}
-
 
 %\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
 
-
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:Introduction}
-Esto es solo un ejemplo de como citar textualmente \citet{Beck+al2023} o entre paréntesis \citep{Beck+al2023}
+%% Esto es solo un ejemplo de como citar textualmente \citet{Beck+al2023} o entre paréntesis \citep{Beck+al2023}
+
+El río Cautín, ubicado en la región de La Araucanía, nace en la falda sur del volcán Lonquimay y fluye hacia el sureste hasta confluir con el río Chol Chol, dando origen al río Imperial \citep{richard_cerda_respuesta_2014}. Con una longitud aproximada de 174 kilómetros, su curso atraviesa las comunas de Curacautín, Lautaro, Vilcún, Padre Las Casas y Temuco, antes de confluir con el río Quepe, lo que evidencia su relevancia tanto geográfica como social.
+
+Este río tiene un régimen pluvial, lo que significa que se alimenta principalmente de agua de lluvia. Así, han sido frecuentes las crecidas e inundaciones que han impactado considerablemente a las comunidades aledañas, y el cambio climático sólo augura un recrudecimiento en estos fenómenos. Según \citet{padilla_turra_registros_2024}, el SENAPRED ha registrado un total de veintiséis emergencias asociadas a crecidas en el Cautín, destacando en junio del 2018 una que finalmente provocó el desplome parcial de un tramo del puente ferroviario que cruzaba el río. Por otra parte, en 2021, \citet{el_mostrador_intendencia_2021} advirtió sobre una alarma emitida por un riesgo de inundación en Temuco y Padre Las Casas; y, dos años después, \citet{mennickent_barros_desbordes_2023} contó que, por un desborde ocurrido en el sector de Rariruca, que une Curacautín con Lautaro, se emitió alerta amarilla en la primera comuna.
+
+Esta situación es de especial preocupación, considerando que en Temuco, por ejemplo, los barrios asociados a la ribera del Cautín son barrios particularmente vulnerables al haberse desarrollado con escasa planificación. \citep{acuna_munoz_volver_2020}. Por lo tanto, surge la necesidad de contar con medidas que permitan responder adecuadamente a estos desastres. En particular, la implementación de sistemas de alerta temprana permite ahorrar hasta diez veces el costo de implementación en pérdidas materiales y humanas. \citep{global_commission_on_adaptation_adapt_nodate}.
+
+El desarrollo de estrategias de manejo de riesgos sostenibles y eficientes bajo condiciones cambiantes requiere comprender los cambios temporales en las causas y efectos de las inundaciones \citep{kreibich_panta_2023}. Así, especialmente en la cuenca a estudiar, es relevante estudiar la incidencia de las precipitaciones sobre el caudal del río. Por otra parte, el avance de la tecnología ha sido tal que realizar predicciones a grandes escalas se ha hecho posible \citep{arnal_towards_2025}. En cuanto a esta materia, existe toda una rama emergente de investigación, donde existen tanto modelos deterministas como probabilísticos. Estos últimos tienen la ventaja de manejar la incertidumbre inherente a estos fenómenos \citep{wakai_historical_2025}.
+
+Dentro de esta última categoría, en los últimos años se dado un énfasis al desarrollo y evaluación de predicciones mediante aprendizaje automático. Cada modelo tiene sus ventajas y desventajas y su aplicabilidad depende de la tarea a resolver y los datos disponibles \citep{fischer_impact_2025}. Citando un caso notable, \citet{luppichini_machine_2024} estudiaron modelos LSTM sobre una cuenca del noroeste de Italia para predecir alturas hidrométricas en una red de estaciones. Los modelos desarrollados ofrecieron predicciones reproducibles, con un bajo costo computacional y errores de unos pocos centímetros. La única observación es que los modelos presentaron una tendencia a subestimar los valores a medida que aumentaba el tiempo de anticipación.
+
+A la fecha de publicación, el presente trabajo propone un enfoque pionero en la Región de la Araucanía al poner a prueba diferentes modelos, comparando sus proyecciones de caudal con datos históricos observados. De este modo, se pretende validar la utilidad de esta herramienta en escenarios reales.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Metodología}
 \label{sec:Metodologia}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Resultados} 
+\section{Resultados}
 \label{sec:Resultados}
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \section{Conclusiones}
-\label{sec:Conclusiones} 
-
+\label{sec:Conclusiones}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Agradecimientos}
-\label{Agradecimientos}
+\section{Contribuciones}
+\label{Contribuciones}
 Ninguno.
-
-
-
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
@@ -195,7 +176,6 @@ Ninguno.
 %% URL = {http://www.xyz.org/~jones/idx_g.htm}
 %% DOI = {10.5194/xyz}
 
-
 %% LITERATURE CITATIONS
 %%
 %% command                        & example result
@@ -208,15 +188,12 @@ Ninguno.
 %% \citeauthor{jones90}|          & Jones et al.
 %% \citeyear{jones90}|            & 1990
 
-
-
 %% FIGURES
 
 %% When figures and tables are placed at the end of the MS (article in one-column style), please add \clearpage
 %% between bibliography and first table and/or figure as well as between each table and/or figure.
 
 % The figure files should be labelled correctly with Arabic numerals (e.g. fig01.jpg, fig02.png).
-
 
 %% ONE-COLUMN FIGURES
 
@@ -356,6 +333,5 @@ Ninguno.
 %%% PHYSICAL UNITS
 %%%
 %%% Please use \unit{} and apply the exponential notation
-
 
 \end{document}
