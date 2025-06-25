@@ -1,10 +1,10 @@
 # OBJETIVO
-# Generar una tabla ordenada con toda la información de caudal por cada estación.
+# Generar una tabla ordenada con toda la información de caudal, una por cada estación.
 # REQUISITOS
 # Se requiere tener instalado el paquete "tidyverse".
 
 # Detección de meses y años
-# Se reciben los índices de las filas que tienen sólo la información de mes y año.
+# Se buscan los índices de las filas que tienen sólo la información de mes y año.
 YearAndMonthDetect <- function(data) {
   ym_pat <- "^\\d{1,2}/\\d{4}$"
   ym_rows <- which(
@@ -13,10 +13,10 @@ YearAndMonthDetect <- function(data) {
   return(ym_rows)
 }
 
+# Lectura de meses y años
+# Se almacena en un vector los meses y los años.
 YearAndMonthRead <- function(data) {
-  # Se obtienen los índices de las filas con la información de mes y año
   ym_rows <-YearAndMonthDetect(data)
-  # Se crea una lista de vectores con información de mes y año
   ym_info <-str_split(
     string=as.character(data[[3]][ym_rows]),
     pattern="/",
@@ -26,6 +26,9 @@ YearAndMonthRead <- function(data) {
   return(ym_info)
 }
 
+# Adición de columnas de mes y año
+# En base al vector de meses y años,
+# se traslada la información a nuevas columnas.
 YearAndMonthAppend <- function(ym_info,data) {
   
   ym_rows <-YearAndMonthDetect(data)
@@ -57,10 +60,12 @@ YearAndMonthAppend <- function(ym_info,data) {
 # Esta apila toda la información de un año.
 ColStack <- function(rawdata) {
   
+  # Adición de información de mes y año.
   ym_info <- YearAndMonthRead(rawdata)
   daterefdata <- YearAndMonthAppend(data=rawdata,ym_info=ym_info)
   
   # Se agarra cada bloque y se asignan nombres a las columnas.
+  # Los bloques incorporan índices para intercalar los datos correspondientes.
   bloque1 <- daterefdata %>%
     select(Y = Y, M = M, Dia = ...1, Hora = ...2, Altura = ...3, Caudal = ...5, O = ...7) %>%
     mutate(indice = row_number(), bloque = 1)
@@ -73,20 +78,20 @@ ColStack <- function(rawdata) {
     select(Y = Y, M = M, Dia = ...16, Hora = ...17, Altura = ...18, Caudal = ...19, O = ...21) %>%
     mutate(indice = row_number(), bloque = 3)
   
-  #Se unen los bloques correspondientes
-  
+  # Se produce la tabla apilada.
   stackeddata <- bind_rows(bloque1, bloque2, bloque3) %>%
     arrange(indice, bloque) %>%
     select(-indice, -bloque)
   
+  # Se propaga la información de mes y año hacia abajo.
   stackeddata <- stackeddata %>%
     mutate(Y=na_if(x=Y,y=""), M=na_if(x=M,y="")) %>% 
     fill(Y, M) %>% 
-    filter(Dia != "MES:")
+    # Se eliminan columnas sin observacioes.
+    filter(Dia != "MES:" & Hora != "HORA")
   
-  #Se limpian los datos
-  finaldata <- stackeddata %>%
-    filter(Hora != "HORA") %>%
+  # Se da formato a las variables.
+  stackeddata <- stackeddata %>%
     mutate(
       Y = as.integer(Y),
       M = as.integer(M),
@@ -97,15 +102,35 @@ ColStack <- function(rawdata) {
       O = as.character(O)
     )
   message("Datos cargados con éxito.")
+  return(stackeddata)
+}
+
+# Ensamblado de fechas
+# Se genera una columna que condensa toda la información de fecha y hora.
+DateAssembly <- function (refdata) {
+  finaldata <- refdata %>% 
+    mutate(
+      Fecha = as.POSIXlt(
+        x= paste(paste(Dia, M, Y, sep="-"), Hora, sep =" "),
+        format="%d-%m-%Y %H:%M", # Día, mes, año, hora y minuto.
+        tz="UTC")
+    ) %>% 
+    select(Fecha, Caudal, O)
   return(finaldata)
 }
 
+# Esta función procesa todos los dataframes de una lista.
 JoinAll <- function(data_list) {
   dateref_data_list <- map(data_list,ColStack)
-  return(dateref_data_list)
+  datefmt_data_list <- map(dateref_data_list, DateAssembly)
+  return(datefmt_data_list)
 }
 
-#Bla bla bla
+# Obtención de series temporales
+# Al usar "bind_rows", se une la información de todos los años en una sola serie.
 cleandata_flow_BCCN <- bind_rows(JoinAll(data_list=rawdata_flow_BCCN))
 cleandata_flow_CCJN <- bind_rows(JoinAll(data_list=rawdata_flow_CCJN))
 cleandata_flow_CRRC <- bind_rows(JoinAll(data_list=rawdata_flow_CRRC))
+
+# Eliminación de bases de datos crudas (ya no necesarias)
+rm(rawdata_flow_BCCN,rawdata_flow_CCJN,rawdata_flow_CRRC)
