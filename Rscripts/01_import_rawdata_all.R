@@ -59,6 +59,7 @@ for (path in flow_filepaths) {
   message("Datos de caudal del año ", year, "exitosamente cargados.")
   rm(path,year)
 }
+rm(flow_filepaths)
 
 # Lectura de datos de precipitaciones.
 # Esta etapa es sencilla y directa.
