@@ -11,7 +11,7 @@ source("all_files_read.R")
 # Limpieza de datos de caudal
 # RESULTADO:
 # Una serie temporal para cada estación
-# Frecuencia horaria, sincronizado con UTC
+# Frecuencia mayoritariamente horaria, sincronizado con UTC
 # Desde 1/1/2002 00:00 hasta 31/12/2024 23:00
 source("flow_date_yearmonDetection.R")
 source("flow_date_build.R")
