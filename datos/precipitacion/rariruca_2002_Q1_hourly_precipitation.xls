@@ -1,0 +1,355 @@
+<table border="1" cellpadding="2" cellspacing="2" id="datos">
+            <thead>
+              <tr bgcolor="#CCCCCC">
+                <th bgcolor="#CCCCCC" class="txt_form" scope="col">Nro.</th>
+                <th nowrap="" bgcolor="#CCCCCC" class="txt_form" scope="col">Fecha-Hora de Medicion</th>
+				
+                <th class="txt_form" nowrap="">RIO CAUTIN E<br>Pptación Instantánea
+(mm)</th>
+                
+                <th class="txt_form" nowrap="">RIO CAUTIN E<br>Pptación Inst (Tx)
+(mm)</th>
+                
+             </tr></thead>
+
+          <tbody>
+            
+				            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">1</td>
+				  <td class="txt">28/06/2025 00:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">2</td>
+				  <td class="txt">28/06/2025 00:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">3</td>
+				  <td class="txt">28/06/2025 01:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">4</td>
+				  <td class="txt">28/06/2025 01:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">5</td>
+				  <td class="txt">28/06/2025 03:28&nbsp;</td>
+				  <td class="txt" align="right"></td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">6</td>
+				  <td class="txt">28/06/2025 03:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">7</td>
+				  <td class="txt">28/06/2025 04:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">8</td>
+				  <td class="txt">28/06/2025 04:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">9</td>
+				  <td class="txt">28/06/2025 05:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">10</td>
+				  <td class="txt">28/06/2025 05:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">11</td>
+				  <td class="txt">28/06/2025 06:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">12</td>
+				  <td class="txt">28/06/2025 06:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">13</td>
+				  <td class="txt">28/06/2025 07:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">14</td>
+				  <td class="txt">28/06/2025 07:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">15</td>
+				  <td class="txt">28/06/2025 08:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">16</td>
+				  <td class="txt">28/06/2025 08:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">17</td>
+				  <td class="txt">28/06/2025 09:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">18</td>
+				  <td class="txt">28/06/2025 09:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">19</td>
+				  <td class="txt">28/06/2025 10:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">20</td>
+				  <td class="txt">28/06/2025 10:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">21</td>
+				  <td class="txt">28/06/2025 11:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">22</td>
+				  <td class="txt">28/06/2025 11:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">23</td>
+				  <td class="txt">28/06/2025 12:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">24</td>
+				  <td class="txt">28/06/2025 12:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">25</td>
+				  <td class="txt">28/06/2025 13:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">26</td>
+				  <td class="txt">28/06/2025 13:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#E4E2E1">
+				  <td class="txt">27</td>
+				  <td class="txt">28/06/2025 14:28&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                            
+              	<tr bgcolor="#F3F2F2">
+				  <td class="txt">28</td>
+				  <td class="txt">28/06/2025 14:58&nbsp;</td>
+				  <td class="txt" align="right">0.000</td>
+				  <td class="txt" align="right">0.000</td>
+  				  
+  				  
+  				  
+				  
+			  </tr>
+
+                			  
+	 </tbody>
+    </table>

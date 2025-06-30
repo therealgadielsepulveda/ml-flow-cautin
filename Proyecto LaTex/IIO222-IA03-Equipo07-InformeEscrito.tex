@@ -75,6 +75,9 @@
 %\usepackage{subfig}
 %\usepackage{rotating}
 
+\usepackage[toc, page]{appendix}
+\renewcommand{\appendixname}{Anexos}
+
 \begin{document}
 
 \title{"Use of machine learning models for flow rate prediction in the Cautín River through R" \\
@@ -120,7 +123,7 @@ Proyecto Final - Informe de Avance 03}
 
 %\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
 
-\introduction  %% \introduction[modified heading if necessary]
+\introduction[Introducción]  %% \introduction[modified heading if necessary]
 \label{sec:Introduction}
 %% Esto es solo un ejemplo de como citar textualmente \citet{Beck+al2023} o entre paréntesis \citep{Beck+al2023}
 
@@ -134,18 +137,80 @@ El desarrollo de estrategias de manejo de riesgos sostenibles y eficientes bajo 
 
 Dentro de esta última categoría, en los últimos años se dado un énfasis al desarrollo y evaluación de predicciones mediante aprendizaje automático. Cada modelo tiene sus ventajas y desventajas y su aplicabilidad depende de la tarea a resolver y los datos disponibles \citep{fischer_impact_2025}. Citando un caso notable, \citet{luppichini_machine_2024} estudiaron modelos LSTM sobre una cuenca del noroeste de Italia para predecir alturas hidrométricas en una red de estaciones. Los modelos desarrollados ofrecieron predicciones reproducibles, con un bajo costo computacional y errores de unos pocos centímetros. La única observación es que los modelos presentaron una tendencia a subestimar los valores a medida que aumentaba el tiempo de anticipación.
 
-A la fecha de publicación, el presente trabajo propone un enfoque pionero en la Región de la Araucanía al poner a prueba diferentes modelos, comparando sus proyecciones de caudal con datos históricos observados. De este modo, se pretende validar la utilidad de esta herramienta en escenarios reales.
+A la fecha de publicación, el presente trabajo propone un enfoque pionero en la Región de la Araucanía al poner a prueba el rendimiento del aprendizaje automático para sistemas de alerta temprana. El objetivo general de este proyecto fue evaluar la precisión de las predicciones de caudal en una estación fluviométrica para diferentes modelos de aprendizaje automático en base a datos de caudal y precipitaciones. Los objetivos específicos fueron:
+\begin{itemize}
+  \item Entrenar los modelos de aprendizaje automático xgboost, randomforest y LSTM para obtener proyecciones de caudal en base a datos hidrológicos históricos.
+  \item Comparar los niveles de caudal predichos por cada modelo con datos históricos en diferentes momentos del sistema.
+  \item Implementar una aplicación web que permita la visualización, análisis y descarga de los resultados obtenidos.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Metodología}
 \label{sec:Metodologia}
 
+\subsection{Datos utilizados}
+La zona estudiada corresponde a la cuenca de Cautín Alto, en la Región de la Araucanía, en Chile. Las estaciones hidrológicas consideradas fueron las estaciones Río Cautín en Cajón, Río Cautín en Rari-Ruca, y Río Blanco en Curacautín, todas dependientes de la Dirección General de Aguas, y cuyas ubicaciones se pueden apreciar en la figura \ref{fig:gauges}.
+
+\begin{figure}[h!]
+  \includegraphics{a}
+  \caption{Ubicación espacial y tipo de las estaciones consideradas. En azul, se marcan las estaciones de entrada y en rojo, las de salida.}
+  \label{fig:gauges}
+\end{figure}
+
+Se recogieron las variables de precipitaciones y caudal desde los sitios web \url{} y \url{https://snia.mop.gob.cl/BNAConsultas/reportes}, respectivamente. En ambos casos, se recogieron series temporales con inicio el 1 de enero de 2002 y fin el 31 de diciembre de 2024. Las restricciones impuestas por los mencionados portales obligaron a la descarga de los datos por fragmentos, en periodos de 1 año. La frecuencia de los datos es sub-diaria, con abundantes tramos en frecuencia regular horaria. Esta información se resumen en la Tabla \ref{tab:data}.
+
+\begin{sidewaystable*}
+  \begin{tabular}[|l|l|l|l|l|l|l|]
+    \hline
+    Estación & Organismo & Variable & Inicio & Fin & Frecuencia & Zona horaria\\
+    \hline
+    Río Cautín en Cajón & DGA & Caudal & 1/1/2002 & 31/12/2024 & subdiaria & UTC -4\\
+    \hline
+    \caption{Resumen de las principales características de los datos extraídos.}
+    \label{tab:data}
+  \end{tabular}
+\end{sidewaystable*}
+
+\subsection{Modelos a evaluar}
+
+Se escogieron tres modelos de aprendzaje automático para esta evaluación. En primer lugar, el modelo xgboost es una implementación del modelo de descenso de grandiente, desarrollado por Cada uno de estos modelos se describe extensivamente en el anexo \ref{appendix:Anexo A}.
+
+En los tres casos, la variable a obtener,
+\subsection{Métricas de error}
+
+El raíz del error cuadrático medio, abreviado como $\mathrm{RMSE}$ por sus siglas en inglés consiste en la raíz cuadrada de la suma de los cuadrados de las diferencias entre valores estimados y valores medidos. Su uso está validado como medición de la precisión de un modelo hidrológico por \citet{luppichini_machine_2024}.
+
+\begin{equation}
+  \mathrm{RMSE} = \sqrt{\dfrac{1}{n}\sum_{j=1}^{n} (Y_i-Y_i)^2}
+\end{equation}
+
+El Coeficiente de eficiencia de Nash-Sutcliffe, conocido por sus siglas en inglés como NSE, se utiliza para evaluar la eficacia predictiva de un modelo hidrológico. Considerando un total de $T$ observaciones, se calcula como:
+
+\begin{equation}
+  \mathrm{NSE} = 1 - \dfrac
+  {\sum_{t=1}^T (Q_o^t-Q_m^t)^2}
+  {\sum_{t=1}^T (Q_o^t-Q_o)^2}
+\end{equation}
+
+donde $Q_o^t$ indica el valor observado al tiempo $t$, $Q_m^t$ indica el valor modelado al tiempo $t$, y $Q_o$ es el promedio de las observaciones. El valor de este coeficiente puede variar entre $-\infty$ y $1$, con $\mathrm{NSE}=1$ siendo el valor óptimo. \citet{melsen_rise_2025} indican que valores entre 0 y 1 se consideran aceptables, mientras que un valor inferior a 1 muestra que el promedio es un mejor predictor que cualquier valor modelado, y, por lo tanto, el modelo no tiene capacidad predictiva.
+
+\subsection{Proceso}
+Para llevar a cabo este proyecto, se dividió el flujo de trabajo en cinco grandes etapas: descarga y procesamiento de datos, fusión y partición de datos, entrenamiento de modelos, prueba de modelos, e implementación de la aplicación web.
+
+La primera función se usó para importar los datos. Recibe como entrada una ruta de directorio, donde examina, y, dependiendo del tipo de archivo leído, lee los valores correspondientes.
+
+La segunda función se usó para proesar los datos
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resultados}
 \label{sec:Resultados}
 
+\subsection{Prueba de modelos}
+
+\subsection{Implementación de aplicación web}
+Para visualizar y analizar el comportamiento de cada modelo y compararlo con
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -156,7 +221,10 @@ A la fecha de publicación, el presente trabajo propone un enfoque pionero en la
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contribuciones}
 \label{Contribuciones}
-Ninguno.
+
+Rocío Cano Manzano realizó un catastro inicial de los eventos de crecida más relevantes en la Cuenca del Río Cautín durante el siglo XX como inicio de la motivación. Ella también descargó los datos necesarios, programó funciones para la lectura y limpieza de datos y produjo la interfaz de usuario de la aplicación web en Shiny.
+
+Gadiel Sepúlveda Aguilera investigó el estado del arte de la modelación hidrológica y su aplicación a los sistemas de alerta temprana. Él también fue el encargado de programar funciones para el entrenamiento, validación, y prueba de modelos, el análisis del evento extremo de junio de 2018.
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
@@ -168,6 +236,7 @@ Ninguno.
 %% authors experienced with BibTeX only have to include the following two lines:
 %%
 \bibliographystyle{copernicus}
+
 \bibliography{Referencias}
 
 %%
@@ -333,5 +402,10 @@ Ninguno.
 %%% PHYSICAL UNITS
 %%%
 %%% Please use \unit{} and apply the exponential notation
+\begin{appendices}
+  \section{Anexo A}
+  \label{appendix:Anexo A}
+
+\end{appendices}
 
 \end{document}
