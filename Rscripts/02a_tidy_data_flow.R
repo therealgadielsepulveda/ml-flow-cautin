@@ -5,6 +5,8 @@
 
 # Detección de meses y años
 # Se buscan los índices de las filas que tienen sólo la información de mes y año.
+# Esta información se puede encontrar en la tercera columna ante una inspección manual.
+# Es de gran ayuda contar con RStudio para llevar a cabo este proceso.
 YearAndMonthDetect <- function(data) {
   ym_pat <- "^\\d{1,2}/\\d{4}$"
   ym_rows <- which(
@@ -23,6 +25,7 @@ YearAndMonthRead <- function(data) {
     n=2,
     simplify=TRUE
   )
+  # El vector obtenido almacena strings con sucesión mes-año.
   return(ym_info)
 }
 
@@ -66,6 +69,9 @@ ColStack <- function(rawdata) {
   
   # Se agarra cada bloque y se asignan nombres a las columnas.
   # Los bloques incorporan índices para intercalar los datos correspondientes.
+  # Las columnas se escogieron a través de inspección manual.
+  
+  # Cada bloque contiene columnas, de izquierda a derecha, de año, mes, día, hora, y caudal.
   bloque1 <- daterefdata %>%
     select(Y = Y, M = M, Dia = ...1, Hora = ...2, Altura = ...3, Caudal = ...5, O = ...7) %>%
     mutate(indice = row_number(), bloque = 1)
@@ -119,18 +125,21 @@ DateAssembly <- function (refdata) {
   return(finaldata)
 }
 
-# Esta función procesa todos los dataframes de una lista.
-JoinAll <- function(data_list) {
-  dateref_data_list <- map(data_list,ColStack)
-  datefmt_data_list <- map(dateref_data_list, DateAssembly)
-  return(datefmt_data_list)
+# Esta función procesa todos los dataframes en una lista.
+# En este caso particular, todos los años asociados a una estación.
+# Devuelve un único dataframe con toda la información de interés.
+JoinByGauge <- function(data_list) {
+  clean_data_ts <- data_list %>% 
+  map(ColStack) %>% 
+  map(DateAssembly) %>%
+  bind_rows()
+  return(clean_data_ts)
 }
 
-# Obtención de series temporales
-# Al usar "bind_rows", se une la información de todos los años en una sola serie.
-cleandata_flow_BCCN <- bind_rows(JoinAll(data_list=rawdata_flow_BCCN))
-cleandata_flow_CCJN <- bind_rows(JoinAll(data_list=rawdata_flow_CCJN))
-cleandata_flow_CRRC <- bind_rows(JoinAll(data_list=rawdata_flow_CRRC))
-
-# Eliminación de bases de datos crudas (ya no necesarias)
-rm(rawdata_flow_BCCN,rawdata_flow_CCJN,rawdata_flow_CRRC)
+# Condensa el procedimiento para todos los datos de caudal.
+ProcessAll <- function(from, to) {
+  for (gauge in names(from)) {
+    to[[gauge]] <- JoinByGauge(from[[gauge]])
+  }
+  return(to)
+}

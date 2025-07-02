@@ -16,12 +16,12 @@ library(tidyverse)
 # Si el archivo es Excel, lee una hoja de un archivo a la vez.
 # Si el archivo es .csv, lee el archivo completo.
 # En ambos casos, entrega un tibble.
-ReadRawInfo <- function(path, gauge) {
+ReadRawSheet <- function(path, gauge) {
   
   if (str_detect(string=path, pattern=".xls")) {
     data <- read_excel(
       path=path, sheet=gauge,
-      skip=9 # Las primeras 9 filas contienen información no relevante para el análisis.
+      skip=9, # Las primeras 9 filas contienen información no relevante para el análisis.
       )
   } else {
     if (str_detect(string = path, pattern = ".csv")) {
@@ -34,33 +34,37 @@ ReadRawInfo <- function(path, gauge) {
   
   return(data)
 }
-  
-# Recoge las rutas de los archivos de datos de caudal.
-flow_filepaths <- dir(
-  path="datos/caudal",
-  all.files=FALSE, full.names=TRUE)
 
-# Estas son listas que contendrán los datos de caudal.
-# Cada lista representa una estación hidrométrica.
-# CCJN: Cautín en Cajón
-# CRRC: Cautín en Rari-Ruca
-# BCCN: Blanco en Curacautín
-# Cada elemento representará toda la información de un año.
-rawdata_flow_CCJN <- vector(mode="list", length=0)
-rawdata_flow_CRRC <- vector(mode="list", length=0)
-rawdata_flow_BCCN <- vector(mode="list", length=0)
+# Función de recogida de archivos.
+# Esta función examina todos los archivos de datos.
+# Lee la información de acuerdo con su tipo.
+# El resultado es guardar la información deseada en las estructuras de datos fijadas.
+ReadInDir <- function(db, dir, gauge_list) {
   
-# Lectura de datos para cada año.
-for (path in flow_filepaths) {
-  year <- str_extract(string=path, pattern = "20..") # El patrón recogerá los años.
-  rawdata_flow_CCJN[[year]] <- ReadRawInfo(path=path, gauge="RIO CAUTIN EN CAJON")
-  rawdata_flow_CRRC[[year]] <- ReadRawInfo(path=path, gauge="RIO CAUTIN EN RARI-RUCA")
-  rawdata_flow_BCCN[[year]] <- ReadRawInfo(path=path, gauge="RIO BLANCO EN CURACAUTIN")
-  message("Datos de caudal del año ", year, "exitosamente cargados.")
-  rm(path,year)
+  # Se recogen todas las rutas de archivo posibles.
+  dir <- dir(path=dir, full.names=TRUE, recursive=TRUE)
+  
+  # Lectura de datos para cada año.
+  for (gauge in gauge_list) {
+    db[[gauge]] <- vector(mode="list", length=0)
+  }
+
+  for (path in dir) {
+    
+    # Si los datos son de caudal, se procederá a:
+    # Extraer el año del archivo.
+    # Obtener los datos de cada estación, correspondientes a una hoja a la vez.
+    # Guardarlos como elementos del elemento correspondiente en la base de datos crudos.
+    
+    if (str_detect(string = path, pattern = "caudal")) {
+      year <- str_extract(string=path, pattern = "20..") # El patrón recogerá los años.
+      for (gauge in gauge_list) {
+        # Llenado de infornación para cada año
+        db[[gauge]][[year]] <- ReadRawSheet(path=path, gauge=gauge)
+        
+        message("Datos de caudal de ", gauge, " para el año ", year, "exitosamente cargados.")
+      }
+    }
+  }
+  return(db)
 }
-rm(flow_filepaths)
-
-# Lectura de datos de precipitaciones.
-# Esta etapa es sencilla y directa.
-rawdata_precipitation <- ReadRawInfo(path="datos/precipitation_6h_maquehue.csv", gauge=NULL)
