@@ -3,7 +3,7 @@ Data, scripts and documents used for "Use of machine learning models for flow pr
 
 # Testing
 ## Requirements
-At the moment of publishing, the full project can be reproduced on any computer with R (4.5.0) and Python (3.11 or later) installed.
+At the moment of publishing, the full project can be reproduced on any computer with R (4.5.0) installed.
 It is strongly recommended to have RStudio installed. On any case, you will need at least 5 GB of free space on your drive.
 
 ## Settings
