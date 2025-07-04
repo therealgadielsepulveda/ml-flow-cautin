@@ -12,13 +12,6 @@ YearAndMonthDetect <- function(data) {
   ym_rows <- which(
     str_detect(data[[3]],pattern=ym_pat)
   )
-  return(ym_rows)
-}
-
-# Lectura de meses y años
-# Se almacena en un vector los meses y los años.
-YearAndMonthRead <- function(data) {
-  ym_rows <-YearAndMonthDetect(data)
   ym_info <-str_split(
     string=as.character(data[[3]][ym_rows]),
     pattern="/",
@@ -79,7 +72,7 @@ ColStack <- function(rawdata, name) {
   o_id <- as.name(paste(gauge_id, "O", sep = "_"))
   
   # Adición de información de mes y año.
-  ym_info <- YearAndMonthRead(rawdata)
+  ym_info <- YearAndMonthDetect(rawdata)
   daterefdata <- YearAndMonthAppend(data=rawdata,ym_info=ym_info)
   
   # Se agarra cada bloque y se asignan nombres a las columnas.

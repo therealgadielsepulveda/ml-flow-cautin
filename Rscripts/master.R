@@ -41,7 +41,7 @@ rm(rawdata)
 # PROCESO:
 # Limpieza de datos de precipitaciones
 # RESULTADO:
-source()
+#source()
 
 # PROCESO:
 # Partición de series temporales
