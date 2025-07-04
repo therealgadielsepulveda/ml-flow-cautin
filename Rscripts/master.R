@@ -49,7 +49,8 @@ source()
 # Series de entrenamiento y validación
 # Desde 1/1/2002 00:00 hasta 
 # Series de 
-source("data_partition.R")
+source("Rscripts/04_merge_and_partition.R", echo = FALSE)
+flowts <- TSMerge(cleandata)
 
 # PROCESO:
 # Armado de matrices

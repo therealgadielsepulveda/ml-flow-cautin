@@ -61,7 +61,22 @@ YearAndMonthAppend <- function(ym_info,data) {
 
 # Esta función, diseñada a medida para los archivos DGA.
 # Esta apila toda la información de un año.
-ColStack <- function(rawdata) {
+ColStack <- function(rawdata, name) {
+  
+  # Se genera una sigla para cada estación.
+  if (str_detect(string = name, pattern = "CURACAUTIN")) {
+    gauge_id <- "RBCC"
+  }
+  if (str_detect(string = name, pattern = "RARI-RUCA")) {
+    gauge_id <- "RCRR"
+  }
+  if (str_detect(string = name, pattern = "CAJON")) {
+    gauge_id <- "RCJN"
+  }
+  
+  # Se asignan identificadores únicos a las variables de cada estación.
+  q_id <- as.name(paste(gauge_id, "Q", sep= "_"))
+  o_id <- as.name(paste(gauge_id, "O", sep = "_"))
   
   # Adición de información de mes y año.
   ym_info <- YearAndMonthRead(rawdata)
@@ -73,15 +88,15 @@ ColStack <- function(rawdata) {
   
   # Cada bloque contiene columnas, de izquierda a derecha, de año, mes, día, hora, y caudal.
   bloque1 <- daterefdata %>%
-    select(Y = Y, M = M, Dia = ...1, Hora = ...2, Altura = ...3, Caudal = ...5, O = ...7) %>%
+    select(Y = Y, M = M, Dia = ...1, Hora = ...2, !!q_id := ...5, !!o_id := ...7) %>%
     mutate(indice = row_number(), bloque = 1)
   
   bloque2 <- daterefdata %>%
-    select(Y = Y, M = M, Dia = ...8, Hora = ...9, Altura = ...10, Caudal = ...11, O = ...15) %>%
+    select(Y = Y, M = M, Dia = ...8, Hora = ...9, !!q_id := ...11, !!o_id := ...15) %>%
     mutate(indice = row_number(), bloque = 2)
   
   bloque3 <- daterefdata %>%
-    select(Y = Y, M = M, Dia = ...16, Hora = ...17, Altura = ...18, Caudal = ...19, O = ...21) %>%
+    select(Y = Y, M = M, Dia = ...16, Hora = ...17, !!q_id := ...19, !!o_id := ...21) %>%
     mutate(indice = row_number(), bloque = 3)
   
   # Se produce la tabla apilada.
@@ -97,49 +112,48 @@ ColStack <- function(rawdata) {
     filter(Dia != "MES:" & Hora != "HORA")
   
   # Se da formato a las variables.
-  stackeddata <- stackeddata %>%
+  finaldata <- stackeddata %>%
     mutate(
       Y = as.integer(Y),
       M = as.integer(M),
       Dia = as.integer(Dia),
       Hora = as.character(Hora),
-      Altura = as.numeric(Altura),
-      Caudal = as.numeric(Caudal),
-      O = as.character(O)
-    )
-  message("Datos cargados con éxito.")
-  return(stackeddata)
-}
-
-# Ensamblado de fechas
-# Se genera una columna que condensa toda la información de fecha y hora.
-DateAssembly <- function (refdata) {
-  finaldata <- refdata %>% 
+      !!q_id := as.numeric(!!q_id),
+      !!o_id := as.character(!!o_id)
+    ) %>%
+    
+    # Formación de la columna de fecha a partir de la de mes, año, día y hora.
     mutate(
-      Fecha = as.POSIXlt(
-        x= paste(paste(Dia, M, Y, sep="-"), Hora, sep =" "),
-        format="%d-%m-%Y %H:%M", # Día, mes, año, hora y minuto.
-        tz="UTC")
+      Fecha = with_tz(
+        time = as.POSIXlt(
+          x= paste(paste(Dia, M, Y, sep="-"), Hora, sep =" "),
+          format="%d-%m-%Y %H:%M", # Día, mes, año, hora y minuto.
+          tz="Etc/GMT-4"),
+        tzone = "GMT")
     ) %>% 
-    select(Fecha, Caudal, O)
+    # Mantención de columnas de fecha, caudal, y fuente.
+    select(Fecha, !!q_id, !!o_id)
+  message("Datos cargados con éxito.")
   return(finaldata)
 }
 
 # Esta función procesa todos los dataframes en una lista.
 # En este caso particular, todos los años asociados a una estación.
 # Devuelve un único dataframe con toda la información de interés.
-JoinByGauge <- function(data_list) {
+JoinByGauge <- function(data_list, name) {
   clean_data_ts <- data_list %>% 
-  map(ColStack) %>% 
-  map(DateAssembly) %>%
+  map(function(x) ColStack(x, name = name)) %>% 
   bind_rows()
   return(clean_data_ts)
 }
 
-# Condensa el procedimiento para todos los datos de caudal.
+# Condensa el procedimiento para todos las estaciones.
 ProcessAll <- function(from, to) {
   for (gauge in names(from)) {
-    to[[gauge]] <- JoinByGauge(from[[gauge]])
+    gauge_id <- gauge
+    to[[gauge]] <- JoinByGauge(
+      data_list=from[[gauge]],
+      name = gauge_id)
   }
   return(to)
 }

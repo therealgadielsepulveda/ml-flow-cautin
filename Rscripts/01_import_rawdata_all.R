@@ -52,7 +52,7 @@ ReadInDir <- function(db, dir, gauge_list) {
   for (path in dir) {
     
     # Si los datos son de caudal, se procederá a:
-    # Extraer el año del archivo.
+    # Extraer el año del archivo
     # Obtener los datos de cada estación, correspondientes a una hoja a la vez.
     # Guardarlos como elementos del elemento correspondiente en la base de datos crudos.
     
