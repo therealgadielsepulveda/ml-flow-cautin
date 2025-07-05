@@ -1,0 +1,848 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jstl/core"><head><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/jsf.js.xhtml?ln=javax.faces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/jquery.js.xhtml"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/richfaces.js.xhtml"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/richfaces-base-component.js.xhtml"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/panel.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/richfaces-queue.js.xhtml"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/richfaces-event.js.xhtml"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/togglePanel.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/togglePanelItem.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/collapsiblePanel.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/collapsiblePanelItem.js.xhtml?ln=org.richfaces"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/icons.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/collapsiblePanel.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/accordion.js.xhtml?ln=org.richfaces"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/accordion.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/accordionItem.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/message.js.xhtml?ln=org.richfaces"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/msg.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/jquery.position.js.xhtml"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/json-dom.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/jquery.effects.core.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/jquery.effects.highlight.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/JQuerySpinBtn.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/calendar-utils.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/calendar.js.xhtml?ln=org.richfaces"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/calendar.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/popupPanel.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/popupPanelBorders.js.xhtml?ln=org.richfaces"></script><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/popupPanelSizer.js.xhtml?ln=org.richfaces"></script><link type="text/css" rel="stylesheet" href="/BNAConsultas/rfRes/popupPanel.ecss.xhtml?db=eAHjW!XqPQAE!QKS&amp;ln=org.richfaces" /><script type="text/javascript" src="/BNAConsultas/javax.faces.resource/status.js.xhtml?ln=org.richfaces"></script>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<link href="/BNAConsultas/images/favicon.ico" type="image/x-icon" rel="shortcut icon" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<meta http-equiv="X-UA-Compatible" value="IE=7" /> 
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	
+
+	<title>MOP - Chile</title>
+	<link href="/BNAConsultas/css/baseline.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/buttons.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/menured.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/mop.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/widget096.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/core.css" rel="stylesheet" type="text/css" />
+	<link href="/BNAConsultas/css/popupMessages.css" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" type="image/x-icon" href="/BNAConsultas/images/general/dgaico.ico" />
+
+		<script type="text/javascript"> 
+		//<![CDATA[
+			  function initialize() {
+			  /*
+			    if(document.getElementById("map_canvas") == 'undefined'){
+			    	alert('No hay mapa');
+			    	return;
+			    }
+			  
+			    var latlng = new google.maps.LatLng(-18.48333,-70.33333);
+			    var myOptions = {
+			      zoom: 8,
+			      center: latlng,
+			      mapTypeId: google.maps.MapTypeId.ROADMAP,
+			      scrollwheel: false,
+				   navigationControl: false,
+				   mapTypeControl: false,
+				    scaleControl: false,
+				    draggable: false,
+			    };
+			    var map = new google.maps.Map(document.getElementById("map_canvas"),
+			        myOptions);
+			        
+			    var marker = new google.maps.Marker({
+      				position: new google.maps.LatLng(-18.48333,-70.33333),
+      				title:"Estación Meteorológica Arica",
+      				color: '#00ff00'
+  				});
+  
+  
+  				var marker2 = new google.maps.Marker({
+      				position: new google.maps.LatLng(-18.350839,-70.333378),
+      				title:"Estación Meteorológica Arica",
+      				color: '#00ff00'
+  				});
+  				// To add the marker to the map, call setMap();
+  				marker.setMap(map);  
+  				marker2.setMap(map);   */
+			  }
+
+
+			  function replaceAll( text, busca, reemplaza ){
+
+				    while (text.toString().indexOf(busca) != -1)
+	
+				        text = text.toString().replace(busca,reemplaza);
+			
+				    return text;
+			
+				  }
+				  			  
+		
+			// Init the page.
+			function initMasks(){
+			
+       		jQuery(".formatDate").keypress(
+       				function( objEvent ){
+       					var charCode = objEvent.charCode;
+       					if (charCode > 31 && (charCode < 48 || charCode > 57))
+       					     return false;
+				        return true;
+       				}
+			);
+			jQuery(".formatDate").keyup(
+					function( objEvent ){
+						if (objEvent.keyCode >= 32) {
+							numeros = replaceAll(this.value,"/","");
+
+							if (this.value.length > 11) {
+								this.value = replaceAll(this.value,"/","");
+								this.value = this.value.substring(0,2) + "/" + this.value.substring(2,4) + "/" +
+								this.value.substring(4,8);
+								this.value = this.value.substring(0,10);
+								return; 
+							}
+							
+							if (this.value.length > 10) {
+								this.value = this.value.substring(0,10);
+								return;
+							}
+							
+							if (this.value.length == 2) {
+								this.value = this.value + "/";
+								return;
+							}
+
+							if (this.value.length == 3) {
+								if (numeros.length==3) {
+									this.value = this.value.substring(0,2) + "/" + this.value.substring(2);
+									return;
+								}
+							}
+							if (this.value.length == 5) {
+								this.value = this.value + "/";
+								return;
+							}
+
+							if (this.value.length == 6) {
+								if (numeros.length==5) {
+									this.value = this.value.substring(0,5) + "/" + this.value.substring(5);
+									return;
+								}
+							}
+							//alert(this.value)
+						}
+					}
+					);
+
+
+
+					jQuery(".formatHours").keypress(
+		       				function( objEvent ){
+		       					var charCode = objEvent.charCode;
+		       					if (charCode > 31 && (charCode < 48 || charCode > 57))
+		       					     return false;
+						        return true;
+		       				}
+					);
+					jQuery(".formatHours").keyup(
+							function( objEvent ){
+								if (objEvent.keyCode >= 32) {
+									numeros = replaceAll(this.value,":","");
+									if (this.value.length > 6) {
+										this.value = replaceAll(this.value,":","");
+										this.value = this.value.substring(0,2) + ":" + this.value.substring(2,4);
+										return;
+									}
+									if (this.value.length > 5) {
+										this.value = this.value.substring(0,5);
+										return;
+									}
+									
+									if (this.value.length == 2) {
+										this.value = this.value + ":";
+										return;
+									}
+		
+									if (this.value.length == 3) {
+										if (numeros.length==3) {
+											this.value = this.value.substring(0,2) + ":" + this.value.substring(2);
+											return;
+										}
+									}
+								
+								}
+							}
+							);
+
+
+					jQuery(".formatPeriod").keypress(
+		       				function( objEvent ){
+		       					var charCode = objEvent.charCode;
+		       					if (charCode > 31 && (charCode < 48 || charCode > 57))
+		       					     return false;
+						        return true;
+		       				}
+					);
+					jQuery(".formatPeriod").keyup(
+							function( objEvent ){
+								if (objEvent.keyCode >= 32) {
+									numeros = replaceAll(this.value,"/","");
+
+									if (this.value.length > 8) {
+										this.value = replaceAll(this.value,"/","");
+										this.value = this.value.substring(0,2) + "/" + this.value.substring(2,6) ;
+										
+										return;
+									}
+									
+									if (this.value.length > 7) {
+										this.value = this.value.substring(0,7);
+										return;
+									}
+									
+									if (this.value.length == 2) {
+										this.value = this.value + "/";
+										return;
+									}
+
+									if (this.value.length == 3) {
+										if (numeros.length==3) {
+											this.value = this.value.substring(0,2) + "/" + this.value.substring(2);
+											return;
+										}
+									}
+
+								}
+							}
+							);
+
+
+
+
+			
+			}
+			
+			//]]>
+		</script>
+	
+	<script src="http://especiales.mop.gov.cl/menumop/menu.php" type="text/javascript" language="javascript" charset="utf-8"></script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+           
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42358242-1', 'dga.cl');
+  ga('send', 'pageview');
+
+	//]]>
+</script><script>var __uzdbm_1 = "5ec0a3dc-10e5-4083-aaa5-05ee80b67459";var __uzdbm_2 = "ZWM0YTcwNDEtYTE3OC00MmE3LWI1MGItZTZmZjFmODhlMTQwJDE4MS40Mi4yMi4yMDU=";var __uzdbm_3 = "";var __uzdbm_4 = "false";var __uzdbm_5 = "";var __uzdbm_6 = "";var __uzdbm_7 = "";</script> <script>(function(w, d, e, u, c, g, a, b){ w["SSJSConnectorObj"] = {ss_cid : c, domain_info: "auto"}; a = d.createElement(e); a.async = true; a.src = u; b = d.getElementsByTagName(e)[0]; b.parentNode.insertBefore(a, b); })(window,document,"script","https://cdn.perfdrive.com/aperture/aperture.js","89ac","ssConf");</script></head><body class="body" onload="preCarga('/BNAConsultas/images/general/ajax_waitIcon.gif');initMasks();corrigerCalendriers();">
+
+				<div id="barra"><div id="menuRed">
+				  <div class="imgSetRed">
+				    <span>Red MOP</span>
+				  </div>
+				  <div id="topMenuRed">
+				    <ul class="tabs" id="mainMenuRed">
+				      <li class="first-child">
+				        <a href="http://portal.mop.gov.cl/">Sitio MOP</a>
+				      </li>
+				      <li class="dd">
+				        <a href="http://portal.mop.gov.cl/Direccionesyareas/Paginas/default.aspx">Direcciones y Áreas</a>
+				        <ul style="visibility: hidden;">
+				          <li>
+				            <a href="http://www.dgop.cl/">Dirección General de Obras Públicas</a>
+				          </li>
+				          <li>
+				            <a href="http://www.dga.cl/">Dirección General de Aguas</a>
+				          </li>
+				          <li>
+				            <a href="http://www.aeropuertos.gov.cl/">Dirección de Aeropuertos</a>
+				          </li>
+				          <li>
+				            <a href="http://www.arquitecturamop.cl/">Dirección de Arquitectura</a>
+				          </li>
+				          <li>
+				            <a href="http://www.concesiones.cl/">Coordinación de Concesiones</a>
+				          </li>
+				          <li>
+				            <a href="http://www.doh.gov.cl/">Dirección de Obras Hidráulicas</a>
+				          </li>
+				          <li>
+				            <a href="http://www.dop.cl/">Dirección de Obras Portuarias</a>
+				          </li>
+				          <li>
+				            <a href="http://www.vialidad.cl/">Dirección de Vialidad</a>
+				          </li>
+				          <li>
+				            <a href="http://www.dcyf.cl/">Dirección Contabilidad y Finanzas</a>
+				          </li>
+				          <li>
+				            <a href="http://www.dirplan.cl/">Dirección de Planeamiento</a>
+				          </li>
+				          <li>
+				            <a href="http://fiscalia.mop.cl/">Fiscalía</a>
+				          </li>
+				          <li>
+				            <a href="http://www.inh.cl/">Instituto Nacional de Hidráulica</a>
+				          </li>
+				          <li>
+				            <a href="http://www.siss.cl/">Superintendencia de Servicios Sanitarios</a>
+				          </li>
+				        </ul>
+				      </li>
+				      <li class="dd">
+				        <a href="http://portal.mop.gov.cl/Regiones/Paginas/default.aspx">Regiones</a>
+				        <ul id="regiones" style="visibility: hidden;">
+				          <li id="r14">
+				            <a href="http://aricayparinacota.mop.cl/">Arica y Parinacota</a>
+				          </li>
+				          <li id="r1">
+				            <a href="http://tarapaca.mop.cl/">Tarapacá</a>
+				          </li>
+				          <li id="r2">
+				            <a href="http://antofagasta.mop.cl/">Antofagasta</a>
+				          </li>
+				          <li id="r3">
+				            <a href="http://atacama.mop.cl/">Atacama</a>
+				          </li>
+				          <li id="r4">
+				            <a href="http://coquimbo.mop.cl/">Coquimbo</a>
+				          </li>
+				          <li id="r5">
+				            <a href="http://valparaiso.mop.cl/">Valparaíso</a>
+				          </li>
+				          <li id="rm">
+				            <a href="http://metropolitana.mop.cl/">Metropolitana</a>
+				          </li>
+				          <li id="r6">
+				            <a href="http://ohiggins.mop.cl/">O'Higgins</a>
+				          </li>
+				          <li id="r7">
+				            <a href="http://maule.mop.cl/">Maule</a>
+				          </li>
+				          <li id="r8">
+				            <a href="http://biobio.mop.cl/">Bio Bio</a>
+				          </li>
+				          <li id="r9">
+				            <a href="http://araucania.mop.cl/">Araucanía</a>
+				          </li>
+				          <li id="r15">
+				            <a href="http://losrios.mop.cl/">Los Ríos</a>
+				          </li>
+				          <li id="r10">
+				            <a href="http://loslagos.mop.cl/">Los Lagos</a>
+				          </li>
+				          <li id="r11">
+				            <a href="http://aysen.mop.cl/">Aisén</a>
+				          </li>
+				          <li id="r12">
+				            <a href="http://magallanes.mop.cl/">Magallanes y la Antártica Chilena</a>
+				          </li>
+				        </ul>
+				      </li>
+				      <li class="dd">
+				        <a href="http://portal.mop.gov.cl/servicios/Paginas/Default.aspx">Servicios</a>
+				        <ul style="visibility: hidden;">
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/AguayRecursosHidricos.aspx">Agua y Recursos Hídricos</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/Concesiones.aspx">Concesiones</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/acercadelmop/ConcursosdePersonal/Paginas/default.aspx">Concursos de Personal</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/ContratistasyConsultores.aspx">Contratistas y Consultores</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/EdificacionPublica.aspx">Edificación Pública</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/InformacionVialcarreterasypasosfronterizos.aspx">Información Vial, Carreteras y Pasos Fronterizos</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/ConcursosyLicitaciones.aspx">Licitaciones y Concursos</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/Mapasplanoseinformacionsatelital.aspx">Mapas, Planos e Información Satelital</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/Proyectosplanesyobras.aspx">Proyectos, Planes y Obras</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/Puertosyaeropuertos.aspx">Puertos y Aeropuertos</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/servicios/Paginas/Temassanitariosymedioambientales.aspx">Temas Sanitarios y Medioambientales</a>
+				          </li>
+				          <li>
+				            <a href="http://transparencia.mop.cl/">Gobierno Transparente</a>
+				          </li>
+				          <li>
+				            <a href="http://portal.mop.gov.cl/Informacion_de_Emergencias/Paginas/Regiones.aspx">Información de Emergencias</a>
+				          </li>
+				        </ul>
+				      </li>
+				    </ul>
+				  </div>
+				  <div id="menuApoyoRed">
+				    <ul class="nav">
+				      <li class="first-child">
+				        <a target="_blank" href="http://portal.mop.gov.cl/FAQ/">Preguntas Frecuentes</a>
+				      </li>
+				      <li>
+				        <a target="_blank" href="http://oirs.mop.gov.cl/">Atención</a>
+				      </li>
+				      <li>
+				        <span class="phone">02 4494000</span>
+				      </li>
+				    </ul>
+				  </div>
+				</div>
+		</div>
+		<div style="height:33px;"></div>
+			
+	
+		<script>
+		var widgetId1;
+		function acomodarAcordion2() {
+			acomodarAcordion3();
+			RichFaces.$('waitPanel').hide();
+		}
+		
+	    function doReCaptchaLoad() {
+			 widgetId1 = grecaptcha.render( 'recaptchav2', {
+					  'sitekey' :"6LcRYtwqAAAAACZzq5MG06b68xaZpAhVHOJaLCFt"
+				});
+			 desactivarbotonbusqueda();
+		    };
+		    
+		    
+		    function desactivarBoton() {
+		    	desactivarbotonbusqueda();
+			    };
+		
+		
+		var elemento;
+		function acomodarAcordion(element) {
+			RichFaces.$('waitPanel').show('',{height:'80px',width:'260px',style:'top:50%; left:50%; margin:-40px 0 0 -130px; text-align:center;'});
+			elemento = element;
+			setTimeout('acomodarAcordion2()',5);
+			
+		}
+		
+	
+		        
+		        function recaptchacallback() {
+		        validarcaptcha();
+		        };
+		        
+		</script>
+	
+		<script type="text/javascript">
+			//<![CDATA[
+			
+			
+			function acomodarAcordion3() {
+				//clase = jQuery('#' + elemento.id).attr('class');
+				encabezados = jQuery('.' + elemento.attributes["class"].nodeValue );
+				
+				for (i = 0;i < encabezados.length;i++) {
+			//		if (encabezados[i].id == elemento.id) {
+						//idContent = jQuery(elemento).attr('id').replace('header','content');
+					/*	divFin = jQuery(elemento)
+						x = jQuery(divFin).css('top');
+						x = x.replace('px','');
+						x = x.replace('auto','');
+						y = parseInt(x);
+						nuevoTop =  jQuery(divFin).height() + y;
+						//alert(nuevoTop);
+						if (i+1 < encabezados.length) {
+							acomodar = encabezados[i+1]*/
+							acomodarHid = jQuery(encabezados[i]).attr('id') + ':header';
+							acomodarH = jQuery(document.getElementById(acomodarHid));
+							acomodarH.css({ display: 'none' });
+							acomodarH.css({ top: '0px' });
+							acomodarH.css({ display: 'block' });
+							//alert(acomodar);
+						}
+						
+						//x.top + jQuery(acomodar).height()
+						
+		//			}
+					
+				}
+
+
+			
+
+				function ejecutarAnalitics() {
+
+					  var _gaq = _gaq || [];
+					  _gaq.push(['_setAccount', 'UA-42358242-1']);
+					  _gaq.push(['_trackPageview']);
+
+					  (function() {
+					    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+					  })();
+
+				}
+				
+				
+				
+
+
+
+			//]]>
+
+ </script>
+		
+		
+		<script src="https://www.google.com/recaptcha/api.js?onload=desactivarBoton"> </script>
+
+		<div id="page"><div class="rf-p plainPanel top-page" id="header" style="height: 132px;"><div class="rf-p-b plainPanel" id="header_body"><div class="rf-p plainPanel imgSet" id="j_idt11" style="background: none repeat scroll 0 0 #F3F3F3"><div class="rf-p-b plainPanel" id="j_idt11_body"><a href="/BNAConsultas/"><img src="/BNAConsultas/images/dga.jpg" alt="Dirección de General de Aguas" style="margin-left: 15px;" /></a></div></div></div></div>
+
+			<div id="topMenu">
+				<div id="mainMenu" class="tabs" style="width: auto; height: 41px;">
+					<table>
+						<tr>
+							<td style="width: 52%;"><a> </a></td>
+							<td style="min-width: 200px;max-width:200px;text-align: center;"><a href="http://www.arcgis.com/apps/OnePane/basicviewer/index.html?appid=d508beb3a88f43d28c17a8ec9fac5ef0" target="_blank"><span style="font-size:12px !important;">Mapa de red Hidrométrica DGA</span></a></td>
+							<td style="min-width: 200px;max-width:200px;text-align: center;"><a href="http://oirs.mop.gov.cl/" style="font-size:12px !important;" target="_blank">
+									Acceso Plataforma SIAC
+								</a></td>
+						</tr>
+					</table>
+				</div>
+			</div><div class="rf-p plainPanel" id="j_idt22" style="height:5px;background: none repeat scroll 0 0 #F3F3F3;width:980px;"><div class="rf-p-b " id="j_idt22_body"></div></div>
+		</div><div class="rf-p plainPanel pagecenter" id="j_idt24"><div class="rf-p-b plainPanel" id="j_idt24_body"><span id="j_idt25" style="display: none;"><script type="text/javascript">validarcaptcha=function(){RichFaces.ajax("j_idt25",null,{"incId":"1"} )};</script></span><span id="j_idt26" style="display: none;"><script type="text/javascript">desactivarbotonbusqueda=function(){RichFaces.ajax("j_idt26",null,{"incId":"1"} )};</script></span><span id="j_idt27" style="display: none;"><script type="text/javascript">desactivarbotonbusquedaByXls=function(){RichFaces.ajax("j_idt27",null,{"incId":"1"} )};</script></span> 
+			<div class="noticias entorno_largo">
+
+				<div class="encabezado_entorno_largo"></div>
+
+				<h1>Información Oficial Hidrometeorológica y de Calidad de Aguas en Línea</h1>
+
+				<div class="vista_servicio">
+
+					<div id="plantillaVista">
+
+						<div>
+
+							<div class="serv_colum2" style="width: 100%;">
+
+								<hr class="separadormenucc" /><div class="rf-p plainPanel" id="j_idt29" style="height:20px;width:780px"><div class="rf-p-b " id="j_idt29_body"></div></div>
+<form id="filtroscirhform" name="filtroscirhform" method="post" action="/BNAConsultas/reportes" enctype="application/x-www-form-urlencoded">
+<input type="hidden" name="filtroscirhform" value="filtroscirhform" />
+<div id="filtroscirhform:regionFieldSetId" class="rf-cp rf-tgp formBox collapsiblecc"><input id="filtroscirhform:regionFieldSetId-value" name="filtroscirhform:regionFieldSetId-value" type="hidden" value="true" /><div id="filtroscirhform:regionFieldSetId:header" class="rf-cp-hdr rf-cp-hdr-exp collapsible-header-cc"><table class="rf-cp-gr"><tbody><tr><td class="rf-cp-ico"><img alt="" class="rf-cp-ico-colps" src="/BNAConsultas/images/icons/filter_16.png" /><img alt="" class="rf-cp-ico-exp" src="/BNAConsultas/images/icons/filter_16.png" /></td><td class="rf-cp-lbl"><div class="rf-cp-lbl-exp">Tipos de Informe</div><div class="rf-cp-lbl-colps">Tipos de Informe</div></td></tr></tbody></table></div><div id="filtroscirhform:regionFieldSetId:content" class="rf-cp-b" style="display:block"><div id="filtroscirhform:j_idt30" class="rf-ac"><input id="filtroscirhform:j_idt30-value" name="filtroscirhform:j_idt30-value" type="hidden" value="filtroscirhform:j_idt31" /><div id="filtroscirhform:j_idt31" class="rf-ac-itm"><div class="rf-ac-itm-hdr rf-ac-itm-hdr-act headCatRptAcord" id="filtroscirhform:j_idt31:header"><table class="rf-ac-itm-gr"><tbody><tr><td class="rf-ac-itm-lbl"><div class="rf-ac-itm-lbl-act">Reportes Calidad de Aguas</div><div class="rf-ac-itm-lbl-inact">Reportes Calidad de Aguas</div></td></tr></tbody></table></div><div class="rf-ac-itm-cnt" id="filtroscirhform:j_idt31:content"><table>
+<tbody>
+<tr class="estacionesRowsEven">
+<td><input id="filtroscirhform:j_idt33" type="checkbox" name="filtroscirhform:j_idt33" class="selectUnique" style="margin-top: 3px;" onclick="RichFaces.ajax(this,event,{&quot;sourceId&quot;:this,&quot;begin&quot;:&quot;RichFaces.$('waitPanel').show('',{height:'80px',width:'260px',style:'top:50%; left:50%; margin:\u002D40px 0 0 \u002D130px; text\u002Dalign:center;'})&quot;,&quot;parameters&quot;:{&quot;javax.faces.behavior.event&quot;:&quot;click&quot;,&quot;org.richfaces.ajax.component&quot;:&quot;filtroscirhform:j_idt33&quot;} } );return false" /></td>
+<td><label style="padding-right: 0px; text-align: left;">
+Parámetros Físico-Químicos (Mensual)</label></td>
+</tr>
+</tbody>
+</table>
+</div></div><div id="filtroscirhform:j_idt35" class="rf-ac-itm"><div class="rf-ac-itm-hdr rf-ac-itm-hdr-inact headCatRptAcord" id="filtroscirhform:j_idt35:header"><table class="rf-ac-itm-gr"><tbody><tr><td class="rf-ac-itm-lbl"><div class="rf-ac-itm-lbl-act">Reportes Fluviométricos</div><div class="rf-ac-itm-lbl-inact">Reportes Fluviométricos</div></td></tr></tbody></table></div><div class="rf-ac-itm-cnt" id="filtroscirhform:j_idt35:content" style="display: none"></div></div><div id="filtroscirhform:j_idt45" class="rf-ac-itm"><div class="rf-ac-itm-hdr rf-ac-itm-hdr-inact headCatRptAcord" id="filtroscirhform:j_idt45:header"><table class="rf-ac-itm-gr"><tbody><tr><td class="rf-ac-itm-lbl"><div class="rf-ac-itm-lbl-act">Reportes Meteorológicos</div><div class="rf-ac-itm-lbl-inact">Reportes Meteorológicos</div></td></tr></tbody></table></div><div class="rf-ac-itm-cnt" id="filtroscirhform:j_idt45:content" style="display: none"></div></div><div id="filtroscirhform:j_idt64" class="rf-ac-itm"><div class="rf-ac-itm-hdr rf-ac-itm-hdr-inact headCatRptAcord" id="filtroscirhform:j_idt64:header"><table class="rf-ac-itm-gr"><tbody><tr><td class="rf-ac-itm-lbl"><div class="rf-ac-itm-lbl-act">Reportes Pozos</div><div class="rf-ac-itm-lbl-inact">Reportes Pozos</div></td></tr></tbody></table></div><div class="rf-ac-itm-cnt" id="filtroscirhform:j_idt64:content" style="display: none"></div></div><div id="filtroscirhform:j_idt68" class="rf-ac-itm"><div class="rf-ac-itm-hdr rf-ac-itm-hdr-inact headCatRptAcord" id="filtroscirhform:j_idt68:header"><table class="rf-ac-itm-gr"><tbody><tr><td class="rf-ac-itm-lbl"><div class="rf-ac-itm-lbl-act">Reportes Sedimentos</div><div class="rf-ac-itm-lbl-inact">Reportes Sedimentos</div></td></tr></tbody></table></div><div class="rf-ac-itm-cnt" id="filtroscirhform:j_idt68:content" style="display: none"></div></div></div>
+
+											<script>
+			
+								/*				jQuery(".selectUnique").click(function() {
+													jQuery(".selectUnique").removeAttr('checked');
+													jQuery(this).attr('checked', true);
+												});*/
+		
+												//BUG de Rich Faces Corregido  
+												jQuery(".rf-ac-itm-cnt").height('auto');
+												
+											</script></div><div id="filtroscirhform:regionFieldSetId:empty" class="rf-cp-empty" style="display:none"></div></div><div id="filtroscirhform:panelFiltroEstaciones" class="rf-cp rf-tgp formBox collapsiblecc"><input id="filtroscirhform:panelFiltroEstaciones-value" name="filtroscirhform:panelFiltroEstaciones-value" type="hidden" value="true" /><div id="filtroscirhform:panelFiltroEstaciones:header" class="rf-cp-hdr rf-cp-hdr-exp collapsible-header-cc"><table class="rf-cp-gr"><tbody><tr><td class="rf-cp-ico"><img alt="" class="rf-cp-ico-colps" src="/BNAConsultas/images/icons/filter_16.png" /><img alt="" class="rf-cp-ico-exp" src="/BNAConsultas/images/icons/filter_16.png" /></td><td class="rf-cp-lbl"><div class="rf-cp-lbl-exp">Búsqueda de Estaciones</div><div class="rf-cp-lbl-colps">Búsqueda de Estaciones</div></td></tr></tbody></table></div><div id="filtroscirhform:panelFiltroEstaciones:content" class="rf-cp-b" style="display:block"><table id="filtroscirhform:innerPanelFEst1">
+<tbody>
+<tr class="rowOutputSpan">
+<td class="column40 valignMiddle"><label for="filtroscirhform:region" style="width : auto;">
+Región:</label></td>
+<td><select id="filtroscirhform:region" name="filtroscirhform:region" class="select-filtro" size="1" onchange="RichFaces.ajax(this,event,{&quot;sourceId&quot;:this,&quot;parameters&quot;:{&quot;javax.faces.behavior.event&quot;:&quot;change&quot;,&quot;org.richfaces.ajax.component&quot;:&quot;filtroscirhform:region&quot;} } )">	<option value="">[ Seleccione ]</option>
+	<option value="15">DE ARICA Y PARINACOTA</option>
+	<option value="1">DE TARAPACA</option>
+	<option value="2">DE ANTOFAGASTA</option>
+	<option value="3">DE ATACAMA</option>
+	<option value="4">DE COQUIMBO</option>
+	<option value="5">DE VALPARAISO</option>
+	<option value="13">METROPOLITANA</option>
+	<option value="6">DEL LIB.BDO.O'HIGGINS</option>
+	<option value="7">DEL MAULE</option>
+	<option value="16">DE ÑUBLE</option>
+	<option value="8">DEL BIOBIO</option>
+	<option value="9">DE LA ARAUCANIA</option>
+	<option value="14">DE LOS RIOS</option>
+	<option value="10">DE LOS LAGOS</option>
+	<option value="11">DE AISEN DEL GRAL.CARLOS IBAÑEZ</option>
+	<option value="12">DE MAGALLANES Y DE LA ANTARTICA</option>
+</select><img src="/BNAConsultas/images/icons/asterix_8.png" alt="*" style="; margin-left: 0.5em;" title="" class="" /><span class="rf-msg validationMessage" id="filtroscirhform:j_idt78"></span></td>
+</tr>
+<tr class="rowOutputSpan">
+<td class="column40 valignMiddle"><label for="filtroscirhform:selectBusqForEstacion" style="width : auto;">
+Buscar por:</label></td>
+<td><table class="radioLineDirection">
+<tbody>
+<tr>
+<td>
+
+															<script type="text/javascript">
+															//<![CDATA[
+															if (jQuery.browser.msie) {  
+																jQuery(function() {  
+																	jQuery('input:radio, input:checkbox').click(function() {  
+																      this.blur();  
+																      this.focus();  
+																    });  
+																  });  
+																}  
+															//]]>
+															</script><table id="filtroscirhform:selectBusqForEstacion" style="height: 25px; margin: 10px 0;">
+	<tr>
+<td>
+<input type="radio" name="filtroscirhform:selectBusqForEstacion" id="filtroscirhform:selectBusqForEstacion:0" value="1" onchange="RichFaces.ajax(this,event,{&quot;sourceId&quot;:this,&quot;parameters&quot;:{&quot;javax.faces.behavior.event&quot;:&quot;change&quot;,&quot;org.richfaces.ajax.component&quot;:&quot;filtroscirhform:selectBusqForEstacion&quot;} } )" /><label for="filtroscirhform:selectBusqForEstacion:0"> Cuenca Hidrográfica o Nombre Estación</label></td>
+	</tr>
+	<tr>
+<td>
+<input type="radio" name="filtroscirhform:selectBusqForEstacion" id="filtroscirhform:selectBusqForEstacion:1" value="2" onchange="RichFaces.ajax(this,event,{&quot;sourceId&quot;:this,&quot;parameters&quot;:{&quot;javax.faces.behavior.event&quot;:&quot;change&quot;,&quot;org.richfaces.ajax.component&quot;:&quot;filtroscirhform:selectBusqForEstacion&quot;} } )" /><label for="filtroscirhform:selectBusqForEstacion:1"> División Administrativa</label></td>
+	</tr>
+</table></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+											
+											
+											
+											
+											
+											<div id="recaptcha" class="buttonsDiv" style="width: 300px;margin-left: 30%;">
+											<div id="recaptchav2" class="g-recaptcha" data-sitekey="6LcRYtwqAAAAACZzq5MG06b68xaZpAhVHOJaLCFt" data-callback="recaptchacallback" data-expired-callback="desactivarBoton">
+
+											</div>
+											</div>
+
+											
+
+
+												<div id="botonera" class="buttonsDiv"><input id="filtroscirhform:buscar" name="filtroscirhform:buscar" onclick="return false;" value="Buscar" class="iconButton" disabled="disabled" style="background-image: url('/BNAConsultas/images/icons/filter_16.png');" type="submit" /><input id="filtroscirhform:limpiar" name="filtroscirhform:limpiar" onclick="RichFaces.ajax(&quot;filtroscirhform:limpiar&quot;,event,{&quot;incId&quot;:&quot;1&quot;} );return false;" value="Limpiar" class="iconButton" style="background-image: url('/BNAConsultas/images/icons/clear_16.png');" type="submit" />
+												</div>
+												<div class="Footer3" style="background: none repeat scroll 0 0 transparent; color: #CCCCCC; height: 10px;">
+													<address class="Foot3" style="color: #AAAAAA">Sitio
+														optimizado para navegadores Chrome versión 1.1, IE versión
+														7 y Firefox versión 3.6, o superiores</address>
+
+
+												</div></div><div id="filtroscirhform:panelFiltroEstaciones:empty" class="rf-cp-empty" style="display:none"></div></div><div class="rf-p plainPanel" id="filtroscirhform:listadoEstaciones" style="background: none repeat scroll 0 0 transparent;"><div class="rf-p-b " id="filtroscirhform:listadoEstaciones_body"></div></div><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="-9121503357687480803:-3566082166625693175" autocomplete="off" />
+</form>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+				<div class="bt"></div>
+			</div></div></div><div id="detalleEstacionPanel" style="visibility: hidden;"><div class="rf-pp-shade" id="detalleEstacionPanel_shade" style="z-index:100;"><button class="rf-pp-btn" id="detalleEstacionPanelFirstHref" name="detalleEstacionPanelfirstHref"></button></div><div class="rf-pp-cntr " id="detalleEstacionPanel_container" style="position: fixed; z-index:100; "><div class="rf-pp-shdw" id="detalleEstacionPanel_shadow"></div><div class="rf-pp-hdr " id="detalleEstacionPanel_header"><div class="rf-pp-hdr-cnt" id="detalleEstacionPanel_header_content">Detalle de Estación</div></div><div class="rf-pp-hdr-cntrls " id="detalleEstacionPanel_header_controls"><a href="#" onclick="RichFaces.$('detalleEstacionPanel').hide(); return false;"><img src="/BNAConsultas/images/icons/cancel_16.png" /></a></div><div class="rf-pp-cnt-scrlr" id="detalleEstacionPanel_content_scroller"><div class="rf-pp-cnt" id="detalleEstacionPanel_content"><table class="estacionDetalleGlobalTable">
+<tbody>
+<tr>
+<td><table class="estacionDetalleTable">
+<tbody>
+<tr>
+<td class="lblEstac column40"><label>
+Código BNA</label></td>
+<td class="descEstac column60">-</td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Nombre Estación</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+UTM Este</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+UTM Norte</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Altitud</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Latitud</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Longitud</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Vigencia</label></td>
+<td class="descEstac column60">SUSPENDIDA</td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Fecha Inicio</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Código Cuenca</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Código Subcuenca</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Código SubSubcuenca</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Región</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Provincia</label></td>
+<td class="descEstac column60"></td>
+</tr>
+<tr>
+<td class="lblEstac column40"><label>
+Comuna</label></td>
+<td class="descEstac column60"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<input id="cerrarPopUp" name="cerrarPopUp" onclick="jsf.util.chain(this,event,&quot;RichFaces.$('detalleEstacionPanel').hide(); return false;&quot;,&quot;RichFaces.ajax(\&quot;cerrarPopUp\&quot;,event,{\&quot;incId\&quot;:\&quot;1\&quot;} )&quot;);return false;" value="Cerrar" class="iconButton" style="background-image: url('/BNAConsultas/images/icons/left_16.png');" type="submit" />
+
+			<script>
+	
+	
+			
+				
+			</script></div></div></div><script type="text/javascript">new RichFaces.ui.PopupPanel("detalleEstacionPanel",{"height":520,"width":580} );</script></div>
+		<script>  //<![CDATA[
+		function corrigerCalendriers() {
+			 var cals = jQuery(".rich-calendar-popup");
+			 for(var i=0;i<cals.length;i++){
+			 cals[i].onclick= function(){this.component.skipEventOnCollapse=false;};
+			 }
+			}
+		//]]>
+		</script>
+<div id="pageFoot">
+<div class="content">
+<table class="Footer2">
+<tbody><tr>
+<td colspan="3" class="Footer2Title">Servicios MOP</td>
+<td style="border-left:2px #e6e6e6 solid" class="Footer2Title2">Programas y Planes Destacados</td>
+</tr>
+<tr>
+<td style="width:25%">
+<ul> 
+	<li><a target="_blank" href="http://www.mop.cl/acercadelmop/ConcursosdePersonal/Paginas/default.aspx">Concurso de personal</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/AguayRecursosHidricos.aspx">Aguas y Recursos Hídricos</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Concesiones.aspx">Concesiones</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Contratistasyconsultores.aspx">Contratistas y Consultores</a>	</li>
+</ul>
+</td>
+<td style="width:25%">
+<ul>
+	<li><a target="_blank" href="http://transparencia.mop.cl/">Transparencia</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/EdificacionPublica.aspx">Edificación Pública</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Concursosylicitaciones.aspx">Licitaciones y Concursos</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Proyectosplanesyobras.aspx">Planes, Proyectos, Estudios y Obras</a></li>
+</ul>
+</td>
+<td style="width:25%">
+<ul>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Mapasplanoseinformacionsatelital.aspx">Mapa e Información Satelital</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Puertosyaeropuertos.aspx">Puertos y Aeropuertos</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/Temassanitariosymedioambientales.aspx">Temas Sanitarios y Ambientales</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/servicios/Paginas/InformacionVialcarreterasypasosfronterizos.aspx">Información Vial, Carreteras y Pasos Fronterizos</a></li>
+</ul>
+</td>
+<td style="border-left:2px #e6e6e6 solid; width:25%">
+<ul>
+	<li><a target="_blank" href="http://www.mop.cl/programas_y_planes_destacados/programa_emergencia_recontruccion/Paginas/default.aspx">Programa de Emergencia y Reconstrucción</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/programas_y_planes_destacados/Planes_especiales/Paginas/default.aspx">Planes Especiales</a></li>
+	<li><a target="_blank" href="http://www.mop.cl/programas_y_planes_destacados/plan_director_infraestructura/Paginas/default.aspx">Plan Director de Infraestructura</a></li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+
+
+
+<div class="Footer3">
+<address class="Foot3">Ministerio de Obras Públicas, MOP - Morandé 59, Santiago de Chile - Mesa Central: (56+2) 2449 3000 - Atención Ciudadana: (56+2) 2449 4000</address>
+<address class="Link">
+<a href="http://transparencia.dga.cl/" target="_blank">Transparencia Activa</a><a class="sep"></a><a href="http://www.mop.cl/Paginas/Politicadeprivacidad.aspx">Políticas de Privacidad</a><a class="sep"></a><a href="http://www.mop.cl/Paginas/CondicionesdeUso.aspx">Condiciones de Uso</a><a class="sep"></a><a href="http://www.dga.cl/Paginas/utilitarios.aspx">Visualizadores</a>
+</address>
+</div>
+<div style="left: 0px; top: 0px" id="ribbon"><a href="#top"><img src="/BNAConsultas/images/footer.jpg" /> </a></div>	
+</div>
+
+</div><span id="j_idt160"><span style="display:none" class="rf-st-start"></span><span class="rf-st-stop"></span><script type="text/javascript">new RichFaces.ui.Status("j_idt160",{"onstop":function(event){RichFaces.$('waitPanel').hide();},"onstart":function(event){RichFaces.$('waitPanel').show('',{height:'80px',width:'260px',style:'top:50%; left:50%; margin:-40px 0 0 -130px; text-align:center;'})}} )</script></span><div id="waitPanel" style="visibility: hidden;"><div class="rf-pp-shade" id="waitPanel_shade" style="z-index:100;"><button class="rf-pp-btn" id="waitPanelFirstHref" name="waitPanelfirstHref"></button></div><div class="rf-pp-cntr " id="waitPanel_container" style="position: fixed; z-index:100; "><div class="rf-pp-shdw" id="waitPanel_shadow"></div><div class="rf-pp-cnt-scrlr" id="waitPanel_content_scroller"><div class="rf-pp-cnt" id="waitPanel_content">Por favor espere...<img src="/BNAConsultas/images/general/ajax_waitIcon.gif" /></div></div></div><script type="text/javascript">new RichFaces.ui.PopupPanel("waitPanel");</script></div>
+
+	<div class="footerBar">
+	</div><div id="popupInfoMessage" style="visibility: hidden;"><div class="rf-pp-shade" id="popupInfoMessage_shade" style="z-index:100;"><button class="rf-pp-btn" id="popupInfoMessageFirstHref" name="popupInfoMessagefirstHref"></button></div><div class="rf-pp-cntr modalContainer2" id="popupInfoMessage_container" style="position: fixed; z-index:100; "><div class="rf-pp-shdw" id="popupInfoMessage_shadow"></div><div class="rf-pp-hdr-cntrls modalContainer" id="popupInfoMessage_header_controls"><a href="#" onclick="RichFaces.$('popupInfoMessage').hide(); return false;"><img src="/BNAConsultas/images/icons/cancel_16.png" /></a></div><div class="rf-pp-cnt-scrlr" id="popupInfoMessage_content_scroller"><div class="rf-pp-cnt" id="popupInfoMessage_content"><div class="rf-p popUpInfoDiv" id="j_idt167" style="margin-top:25px"><div class="rf-p-b popUpInfoDivCont" id="j_idt167_body"><div class="rf-p plainPanel" id="j_idt168" style="float:left;"><div class="rf-p-b " id="j_idt168_body"><img src="/BNAConsultas/images/icons/information_32.png" class="messageIcon" /></div></div><div class="rf-p plainPanel" id="j_idt172" style="padding-top:10px;"><div class="rf-p-b " id="j_idt172_body">
+				<br /><span id="popupInfoMessageText" class="messageText"></span></div></div></div></div></div></div></div><script type="text/javascript">new RichFaces.ui.PopupPanel("popupInfoMessage",{"maxHeight":120,"maxWidth":400,"minHeight":80,"minWidth":350} );</script></div>
+
+	<script type="text/javascript">
+			//<![CDATA[
+			           function showMessages(){
+							//if (show || show=="true")
+							if (document.getElementById("popupInfoMessageText").innerHTML.replace(/^\s*|\s*$/g,"").length>0)
+								RichFaces.$('popupInfoMessage').show();
+			           }
+			           showMessages();
+			           
+						function preCarga(image) {
+							if (!document.images) return;
+							var ar = new Array();
+						    ar[0] = new Image();
+						    ar[0].src = image;
+						} 
+		
+						function abrirPopUp(nombrePopup) {
+						
+						}
+					
+
+			//]]>
+		</script><script type="text/javascript">new RichFaces.ui.CollapsiblePanel("filtroscirhform:regionFieldSetId",{"ajax":{"incId":"1"} ,"switchMode":"client","activeItem":"true"} )
+new RichFaces.ui.Accordion("filtroscirhform:j_idt30",{"ajax":{"incId":"1"} ,"cycledSwitching":false,"isKeepHeight":false,"activeItem":"filtroscirhform:j_idt31"} )
+new RichFaces.ui.AccordionItem("filtroscirhform:j_idt31",{"index":0,"switchMode":"ajax","onenter":function(event){acomodarAcordion(this)},"togglePanelId":"filtroscirhform:j_idt30","name":"filtroscirhform:j_idt31","disabled":false} )
+new RichFaces.ui.AccordionItem("filtroscirhform:j_idt35",{"index":1,"switchMode":"ajax","onenter":function(event){acomodarAcordion(this)},"togglePanelId":"filtroscirhform:j_idt30","name":"filtroscirhform:j_idt35","disabled":false} )
+new RichFaces.ui.AccordionItem("filtroscirhform:j_idt45",{"index":2,"switchMode":"ajax","onenter":function(event){acomodarAcordion(this)},"togglePanelId":"filtroscirhform:j_idt30","name":"filtroscirhform:j_idt45","disabled":false} )
+new RichFaces.ui.AccordionItem("filtroscirhform:j_idt64",{"index":3,"switchMode":"ajax","onenter":function(event){acomodarAcordion(this)},"togglePanelId":"filtroscirhform:j_idt30","name":"filtroscirhform:j_idt64","disabled":false} )
+new RichFaces.ui.AccordionItem("filtroscirhform:j_idt68",{"index":4,"switchMode":"ajax","onenter":function(event){acomodarAcordion(this)},"togglePanelId":"filtroscirhform:j_idt30","name":"filtroscirhform:j_idt68","disabled":false} )
+new RichFaces.ui.CollapsiblePanel("filtroscirhform:panelFiltroEstaciones",{"ajax":{"incId":"1"} ,"switchMode":"client","activeItem":"true"} )
+$(document).ready(function() {
+new RichFaces.ui.Message("filtroscirhform:j_idt78",{"forComponentId":"filtroscirhform:region","showSummary":false,"showDetail":true} )
+});
+</script></body>
+</html>
