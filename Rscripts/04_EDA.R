@@ -67,13 +67,13 @@ GenSummaryTab <- function(db, dir, suffix) {
 }
 
 # Generación de gráfico para toda la serie temporal.
-TSSimplePlotImg <- function(db, gauge_id, filetype = ".png") {
+TSSimplePlotImg <- function(db, gauge_id, ran, filetype = ".png") {
   
   if (is.element(el = gauge_id, set = names(db))) {
     
     dates <- db[[gauge_id]]$Fecha
     values <- db[[gauge_id]][[2]]
-    filename <- paste0("Resultados/Figuras/", gauge_id, "_Full_TS", filetype)
+    filename <- paste0("Resultados/Figuras/", gauge_id, as.character(dates[1]), "_", as.character(dates[2]), filetype)
     
     if (filetype == ".png") {
       png(filename = filename, width = 1920, height = 960, units = "px")
@@ -88,7 +88,7 @@ TSSimplePlotImg <- function(db, gauge_id, filetype = ".png") {
       main = paste("Caudal instantáneo para la estación", gauge_id, sep = " "),
       xlab = "Fecha",
       ylab = "Caudal instantáneo",
-      xlim = range(dates, na.rm = TRUE)
+      xlim = ran
     )
     dev.off()
     
