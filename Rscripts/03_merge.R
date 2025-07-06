@@ -8,3 +8,7 @@ TSMerge <- function(db) {
   )
   return(merged_df)
 }
+
+TSExamination <- function(db) {
+  db
+}

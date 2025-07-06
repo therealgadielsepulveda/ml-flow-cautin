@@ -1,8 +1,9 @@
-library(viridis) # Se usa la paleta de colores viridis.
-library(rmarkdown)
+library(dplyr)
+library(purrr)
 library(knitr)
 library(kableExtra)
 
+# Obtiene los cuartiles de una serie temporal, dando un dataframe como resultado.
 GetPM <- function(df) {
   
   # Los valores están siempre en la columna 2.
@@ -18,6 +19,29 @@ GetPM <- function(df) {
   return(feats)
 }
 
+# Generador de código LaTeX para tablas a partir de un dataframe sencillo.
+DFToLaTeX <- function(
+    df, # Tabla a considerar
+    rownames = NA,
+    colnames,
+    align = rep("l", ncol(df)), # alineación
+    dir=getwd(),
+    filename="0") {
+  
+  data_kable <- kable(
+    df,
+    format = "latex",
+    row.names = rownames,
+    col.names = colnames,
+    align = align
+  )
+  
+  save_kable(
+    x=data_kable,
+    file=paste0(dir,"/",filename,".tex")
+  )
+}
+  
 # Generación de tabla de resumen por estación.
 # Genera una tabla de medidas de posición para cada estación.
 GenSummaryTab <- function(db, dir, suffix) {
@@ -32,16 +56,13 @@ GenSummaryTab <- function(db, dir, suffix) {
   gauge_summary <- cbind(tibble(tags=tags), gauge_all)
     
   # Produce tabla de resumen
-  gauge_kable <- kable(
-    gauge_summary,
-    format = "latex",
-    col.names = c("Medida",names(db)),
-    align = "lrrr"
-    )
-  
-  save_kable(
-    x=gauge_kable,
-    file=paste0(dir,"/",suffix,".tex")
+  DFToLaTeX(
+    df = gauge_summary,
+    rownames = NA,
+    colnames = c("Medida",names(db)),
+    align = paste("l",rep("r",ncol(gauge_all)-1)),
+    dir =  dir,
+    filename = suffix
   )
 }
 
