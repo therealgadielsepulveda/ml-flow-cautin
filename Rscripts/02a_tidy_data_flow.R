@@ -12,12 +12,13 @@ YearAndMonthDetect <- function(data) {
   ym_rows <- which(
     str_detect(data[[3]],pattern=ym_pat)
   )
-  ym_info <-str_split(
+  ym_data <-str_split(
     string=as.character(data[[3]][ym_rows]),
     pattern="/",
     n=2,
     simplify=TRUE
   )
+  ym_info <-list(rows=ym_rows, data = ym_data)
   # El vector obtenido almacena strings con sucesión mes-año.
   return(ym_info)
 }
@@ -27,14 +28,14 @@ YearAndMonthDetect <- function(data) {
 # se traslada la información a nuevas columnas.
 YearAndMonthAppend <- function(ym_info,data) {
   
-  ym_rows <-YearAndMonthDetect(data)
+  ym_rows <- ym_info$rows
   
   year_by_col <- vector(
     mode = "character",
     length = nrow(data)
   )
   
-  year_by_col[ym_rows] <- ym_info[,2]
+  year_by_col[ym_rows] <- ym_info$data[,2]
   year_by_col[-ym_rows] <- NA
   
   month_by_col <- vector(
@@ -42,7 +43,7 @@ YearAndMonthAppend <- function(ym_info,data) {
     length = nrow(data)
   )
   
-  month_by_col[ym_rows] <- ym_info[,1]
+  month_by_col[ym_rows] <- ym_info$data[,1]
   year_by_col[-ym_rows] <- NA
   
   daterefdata <- data %>%
@@ -134,6 +135,7 @@ ColStack <- function(rawdata, name) {
 # En este caso particular, todos los años asociados a una estación.
 # Devuelve un único dataframe con toda la información de interés.
 JoinByGauge <- function(data_list, name) {
+  name <- as.character(name)
   clean_data_ts <- data_list %>% 
   map(function(x) ColStack(x, name = name)) %>% 
   bind_rows()
