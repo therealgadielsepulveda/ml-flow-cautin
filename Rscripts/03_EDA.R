@@ -6,14 +6,15 @@ library(kableExtra)
 # Obtiene los cuartiles de una serie temporal, dando un dataframe como resultado.
 GetPM <- function(df) {
   
-  # Los valores están siempre en la columna 2.
+  # Los valores están siempre en la columna 2, sin importar si son precipitaciones o caudal.
   values <- df[[2]]
   feats <- c(
-    min(values),
-    quantile(values, 0.25),
-    median(values),
-    quantile(values, 0.75),
-    max(values)
+    length(values),
+    min(values, na.rm = TRUE),
+    quantile(values, 0.25, na.rm=TRUE),
+    median(values, na.rm = TRUE),
+    quantile(values, 0.75, na.rm = TRUE),
+    max(values, na.rm = TRUE)
   )
   
   return(feats)
@@ -47,7 +48,7 @@ DFToLaTeX <- function(
 GenSummaryTab <- function(db, dir, suffix) {
   
   if (is.list(db)) {}
-  tags <- c("Min","Q1","Q2","Q3","Max")
+  tags <- c("n","Min","Q1","Q2","Q3","Max")
   
   # Produce tabla de resumen
   gauge_all <- map(.x = db, .f = GetPM) %>% 
@@ -66,6 +67,18 @@ GenSummaryTab <- function(db, dir, suffix) {
   )
 }
 
+# Obtiene las fuentes de datos de caudal.
+GetOutput <- function(db) {
+  
+  cols <- colnames(db)
+  q_cols <- cols[grep(pattern = "Q", x = cols)] # Las columnas de caudal tienen Q.
+  
+  for (name in q_cols) {
+    N
+  }
+  
+}
+
 # Generación de gráfico para toda la serie temporal.
 TSSimplePlotImg <- function(db, gauge_id, ran, filetype = ".png") {
   
@@ -73,6 +86,7 @@ TSSimplePlotImg <- function(db, gauge_id, ran, filetype = ".png") {
     
     dates <- db[[gauge_id]]$Fecha
     values <- db[[gauge_id]][[2]]
+    range <- ran
     filename <- paste0("Resultados/Figuras/", gauge_id, as.character(dates[1]), "_", as.character(dates[2]), filetype)
     
     if (filetype == ".png") {
@@ -88,7 +102,7 @@ TSSimplePlotImg <- function(db, gauge_id, ran, filetype = ".png") {
       main = paste("Caudal instantáneo para la estación", gauge_id, sep = " "),
       xlab = "Fecha",
       ylab = "Caudal instantáneo",
-      xlim = ran
+      xlim = range
     )
     dev.off()
     

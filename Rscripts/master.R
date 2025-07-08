@@ -7,6 +7,26 @@
 # randomForest para modelado por árboles aleatorios
 # torch, luz para modelado LSTM
 
+library(conflicted)
+
+conflicts_prefer(dplyr::filter, stats::lag)
+
+library(tidyverse)
+library(torch)
+library(luz)
+library(knitr)
+library(xgboost)
+library(randomForest)
+library(readxl)
+library(rmarkdown)
+library(terra)
+# ---
+
+# IMPORTANTE:
+# CAMBIO DE DIRECTORIO DE TRABAJO
+# Ajuste el directorio de trabajo local aquí.
+# Debe ser la ruta absoluta al directorio del proyecto en el equipo.
+# setwd(ruta)
 # ---
 
 # PROCESO:
@@ -17,11 +37,17 @@
 # Carga de funciones, detalles en script.
 source("Rscripts/01_import_rawdata_all.R", echo = FALSE)
 
-# Estructura de datos con toda la información cruda.
-rawdata <- vector(mode="list",length=0)
-gauge_list <- c("RIO CAUTIN EN RARI-RUCA", "RIO CAUTIN EN CAJON", "RIO BLANCO EN CURACAUTIN")
+# Listado de las estaciones consideradas.
+gauge_list <- c("RIO CAUTIN EN RARI-RUCA", "RIO CAUTIN EN CAJON", "RIO BLANCO EN CURACAUTIN", "MAQUEHUE")
 
-rawdata <- ReadInDir(db=rawdata, dir="datos/caudal", gauge_list=gauge_list)
+# Lectura de datos crudos.
+raw_discharge <- ReadDischarge(
+  dir="datos/caudal",
+  gauge_list=gauge_list[1:3])
+
+raw_precipitation <- ReadPrecipitation(
+  dir = "datos/precipitacion",
+  gauge_list=gauge_list[4])
 
 
 # PROCESO:
@@ -34,61 +60,38 @@ rawdata <- ReadInDir(db=rawdata, dir="datos/caudal", gauge_list=gauge_list)
 # Carga de funciones, detalles en script.
 source("Rscripts/02a_tidy_data_flow.R", echo = FALSE)
 
-cleandata <- vector(mode="list", length=0)
-cleandata <- ProcessAll(from=rawdata, to=cleandata)
-rm(rawdata)
+
+clean_discharge <- D_ProcessAll(from=raw_discharge)
 
 # PROCESO:
 # Limpieza de datos de precipitaciones
 # RESULTADO:
-#source()
+source("Rscripts/02b_tidy_data_precipitation.R", echo = FALSE)
+
+range <- c("01-01-2002 00:00:00", "31-12-2024 23:00:00")
+
+clean_precipitation <- P_ProcessAll(
+  from = raw_precipitation,
+  range = range,
+  tz = "UTC"
+)
+
+# Remoción de datos crudos.
+rm(raw_discharge, raw_precipitation)
 
 # PROCESO:
-# Partición de series temporales
+# Análisis exploratorio de datos.
+# RESULTADOS:
+# - Código LaTeX para generar tabla de medidas de posición.
+source("Rscripts/03_EDA.R", echo = FALSE)
+GenSummaryTab(
+  db = c(clean_discharge, clean_precipitation),
+  dir = "Resultados/Tablas/LaTeX",
+  suffix = "EDA")
+
+# PROCESO:
+# Combinación de series temporales
 # RESULTADO:
-# Series de entrenamiento y validación
-# Desde 1/1/2002 00:00 hasta 
-# Series de 
-source("Rscripts/04_merge_and_partition.R", echo = FALSE)
-flowts <- TSMerge(cleandata)
-
-# PROCESO:
-# Armado de matrices
-source("matrix_build.R")
-
-# PROCESO:
-# Entrenamiento de modelo xgboost
-# RESULTADO:
-# Modelos en formato binario
-# Uno por cada paso predictivo, total de 72
-source("xgb_train.R")
-source("xgb_validate.R")
-
-# PROCESO:
-# Entrenamiento de modelo random forest
-# RESULTADO:
-# Modelos en formato binario
-# Uno por cada paso predictivo, total de 72
-source("rf_train.R")
-source("rf_validate.R")
-
-# PROCESO:
-# Entrenamiento de modelo xgboost
-# RESULTADO:
-# Modelos en formato binario
-# Uno por cada paso predictivo, total de 72
-source("LSTM_train.R")
-source("LSTM_validate.R")
-
-# PROCESO:
-# Comparación de modelos
-# RESULTADO:
-# Gráfico de líneas, coeficiente de Nash-Sutcliffe por modelo por paso predictivo
-# Gráfico de líneas, comparación observado-predicho, ventana de 
-
-# PROCESO:
-# Ejecución de aplicación web
-# RESULTADO:
-# Aplicación web con las siguientes características:
-## ENTRADAS:
-## 
+# Un solo dataframe con columna fecha y columnas variables de interés.
+source("Rscripts/04_merge.R", echo = FALSE)
+fullts <- TSMerge(c(clean_discharge, clean_precipitation))
