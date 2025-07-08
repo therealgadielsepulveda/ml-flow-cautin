@@ -2,6 +2,8 @@
 # Este llama a todo el procesamiento y lanza la aplicación web con todas sus funcionalidades.
 
 # PAQUETES REQUERIDOS:
+# conflicted para manejar conflictos entrre funciones del mismo nombre de diferentes paquetes.
+
 # readxl, tidyverse, hydroTSM para manejo de datos
 # xgboost para modelado por potenciación de gradiente
 # randomForest para modelado por árboles aleatorios
@@ -11,14 +13,20 @@ library(conflicted)
 
 conflicts_prefer(dplyr::filter, stats::lag)
 
+library(readxl)
 library(tidyverse)
+
+library(knitr)
+library(kableExtra)
+library(rmarkdown)
+
+library(xgboost)
+
+library(randomForest)
+
 library(torch)
 library(luz)
-library(knitr)
-library(xgboost)
-library(randomForest)
-library(readxl)
-library(rmarkdown)
+
 library(terra)
 # ---
 
@@ -43,11 +51,11 @@ gauge_list <- c("RIO CAUTIN EN RARI-RUCA", "RIO CAUTIN EN CAJON", "RIO BLANCO EN
 # Lectura de datos crudos.
 raw_discharge <- ReadDischarge(
   dir="datos/caudal",
-  gauge_list=gauge_list[1:3])
+  gauge_list=gauge_list[1:3]) # Las estaciones 1 a 3 son fluviométricas.
 
 raw_precipitation <- ReadPrecipitation(
   dir = "datos/precipitacion",
-  gauge_list=gauge_list[4])
+  gauge_list=gauge_list[4]) # La estación 4 es fluviométrica.
 
 
 # PROCESO:
@@ -55,7 +63,7 @@ raw_precipitation <- ReadPrecipitation(
 # RESULTADO:
 # Una serie temporal para cada estación
 # Frecuencia mayoritariamente horaria, sincronizado con UTC
-# Desde 1/1/2002 00:00 hasta 31/12/2024 23:00
+# Desde 1/1/2002 00:00 hasta 31/12/2024 18:00
 
 # Carga de funciones, detalles en script.
 source("Rscripts/02a_tidy_data_flow.R", echo = FALSE)
@@ -80,18 +88,16 @@ clean_precipitation <- P_ProcessAll(
 rm(raw_discharge, raw_precipitation)
 
 # PROCESO:
-# Análisis exploratorio de datos.
-# RESULTADOS:
-# - Código LaTeX para generar tabla de medidas de posición.
-source("Rscripts/03_EDA.R", echo = FALSE)
-GenSummaryTab(
-  db = c(clean_discharge, clean_precipitation),
-  dir = "Resultados/Tablas/LaTeX",
-  suffix = "EDA")
-
-# PROCESO:
 # Combinación de series temporales
 # RESULTADO:
 # Un solo dataframe con columna fecha y columnas variables de interés.
-source("Rscripts/04_merge.R", echo = FALSE)
-fullts <- TSMerge(c(clean_discharge, clean_precipitation))
+source("Rscripts/03_merge.R", echo = FALSE)
+final_ts <- TSMergeAndFilter(c(clean_discharge, clean_precipitation))
+variables <- names(Filter(is.numeric,as.list(final_ts)))
+  
+rm(clean_discharge, clean_precipitation)
+
+# PROCESO:
+# Limpiado, filtrado, y generación de gráficos de AED.
+source("Rscripts/04_EDA.R", echo = FALSE)
+highlights <- GlobalSummary(final_ts)
