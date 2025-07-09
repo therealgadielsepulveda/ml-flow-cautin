@@ -87,34 +87,73 @@ GlobalSummary <- function(df) {
 }
 
 # Generación de gráfico para una serie temporal.
-TSSimplePlotImg <- function(db, gauge_id, ran, filetype = ".png") {
+# ARGUMENTOS
+# - df: dataframe de datos.
+TSBasicPlot <- function(
+    df,
+    var,
+    # El intervalo predeterminado es el rango de fechas de la serie, si existe.
+    interval = ifelse(
+      test = is.element(el = "Fecha", set = colnames(df)),
+      yes = range(df$Fecha),
+      no = NULL
+    ),
+    dir,
+    filename,
+    filetype = ".pdf"
+    ) {
   
-  if (is.element(el = gauge_id, set = names(db))) {
+  varlab <- StrFromVar(var)$label
+  gauge <- StrFromVar(var)$gauge
+  
+  title <- paste0("Evolución de ", str_to_lower(varlab), " en estación ", gauge)
+  
+  var <- as.name(var)
+  
+  # Se generará un gráfico sólo si efectivamente existen datos.
+  if (!is.null(interval) & is.numeric(df[[var]])) {
     
-    dates <- db[[gauge_id]]$Fecha
-    values <- db[[gauge_id]][[2]]
-    range <- ran
-    filename <- paste0("Resultados/Figuras/", gauge_id, as.character(dates[1]), "_", as.character(dates[2]), filetype)
-    
-    if (filetype == ".png") {
-      png(filename = filename, width = 1920, height = 960, units = "px")
-    } else if (filetype == ".jpg") {
-      jpeg(filename = filename, width = 1920, height = 960, units = "px")
+    # Uso de tipografía congruente con informe.
+    par(family = "Times")
+ 
+    # Generación de archivo .pdf
+    if (filetype == ".pdf") {
+      pdf(
+        file = paste(dir, var, filename, filetype, sep = "_"),
+        width = 6, height = 4,
+        onefile = TRUE,
+        family = "Times"
+        
+      )
+      
+    } else {
+      if (filetype == ".png") {
+        png(
+          file = paste(dir, var, filename, filetype, sep = "_"),
+          width = 1080, height = 720, units = "px",
+          family = "Times"
+        )
+      } else {
+        message("Tipo de archivo no válido.") # No se permitirán otros tipos de archivo.
+        break 
+      }
     }
     
+    # Carga gráfico
     plot(
-      x = dates,
-      y = values,
-      type = "l",
-      main = paste("Caudal instantáneo para la estación", gauge_id, sep = " "),
+      x = df$Fecha,
+      y = df[[var]],
+      main = title,
       xlab = "Fecha",
-      ylab = "Caudal instantáneo",
-      xlim = range
+      ylab = varlab,
+      xlim = interval,
+      ylim = c(0, max(df[[var]])),
+      type = "l",
+      col = "#4489FB",
+      lwd = 2,
+      cex = 0.75
     )
+    
     dev.off()
-    
-    
-  } else {
-    stop("No hay datos para la estación de ID ", gauge_id, " .")
   }
 }

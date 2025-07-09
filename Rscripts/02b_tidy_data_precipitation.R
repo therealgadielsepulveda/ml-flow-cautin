@@ -14,7 +14,7 @@ P_Conversion <- function(db, name, tz="UTC") {
   
   db <- db %>% 
     mutate(
-      Fecha = as.POSIXct(momento, tz = tzone, format = "%d-%m-%Y %H:%M:%OS"),
+      Fecha = dmy_hms(momento, tz = tzone),
       !!p_id := as.numeric(RRR6_Valor)
       ) %>% 
     select(Fecha,!!p_id)
@@ -28,13 +28,13 @@ P_Conversion <- function(db, name, tz="UTC") {
 
 P_DateCut <- function(db, range, tz="UTC") {
 
-  initial_date <- as.POSIXct(range[1], tz = tz, format = "%d-%m-%Y %H:%M:%OS")
-  final_date <- as.POSIXct(range[2], tz = tz, format = "%d-%m-%Y %H:%M:%OS")
+  initial_date <- dmy_hms(range[1], tz = tz)
+  final_date <- dmy_hms(range[2], tz = tz)
   
   db <- db %>%
     filter(Fecha >= initial_date & Fecha < final_date)
   
-  return(db)
+  return(as_tibble(db))
 }
 
 P_ProcessAll <- function(from, range, tz="UTC") {

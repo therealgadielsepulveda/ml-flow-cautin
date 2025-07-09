@@ -119,14 +119,14 @@ D_ColStack <- function(rawdata, name) {
     
     # Formación de la columna de fecha a partir de la de mes, año, día y hora.
     mutate(
-      Fecha = as.POSIXlt(
+      Fecha = dmy_hm(
           x= paste(paste(Dia, M, Y, sep="-"), Hora, sep =" "),
-          format="%d-%m-%Y %H:%M", # Día, mes, año, hora y minuto.
           tz="Etc/GMT-4")
     ) %>% 
+    mutate(Fecha = with_tz(time = Fecha, tzone= "UTC")) %>% 
     # Mantención de columnas de fecha, caudal, y fuente.
     select(Fecha, !!q_id, !!o_id)
-  message("Datos cargados con éxito.")
+  
   return(finaldata)
 }
 

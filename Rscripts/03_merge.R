@@ -12,6 +12,10 @@ TSMerge <- function(db) {
     db,
     simplify=FALSE
   )
+  
+  synced_df <- merged_df %>% 
+    mutate(Fecha = with_tz(Fecha, tzone = "UTC"))
+  
   return(as_tibble(merged_df))
 }
 
@@ -19,7 +23,7 @@ TSMerge <- function(db) {
 TSFilter <- function(df) {
   
   mod_df <- df %>% 
-    filter(minute(Fecha) == 0 & hour(Fecha)%% 6 == 0)
+    filter((minute(Fecha) == 0 & hour(Fecha)%% 6 == 0))
   
   return(mod_df)
 }

@@ -92,12 +92,25 @@ rm(raw_discharge, raw_precipitation)
 # RESULTADO:
 # Un solo dataframe con columna fecha y columnas variables de interés.
 source("Rscripts/03_merge.R", echo = FALSE)
-final_ts <- TSMergeAndFilter(c(clean_discharge, clean_precipitation))
-variables <- names(Filter(is.numeric,as.list(final_ts)))
+filtered_ts <- TSMergeAndFilter(c(clean_discharge, clean_precipitation))
+variables <- names(Filter(is.numeric,as.list(filtered_ts)))
   
 rm(clean_discharge, clean_precipitation)
 
 # PROCESO:
 # Limpiado, filtrado, y generación de gráficos de AED.
 source("Rscripts/04_EDA.R", echo = FALSE)
-highlights <- GlobalSummary(final_ts)
+highlights <- GlobalSummary(filtered_ts)
+
+# Se eliminan los valores faltantes para permitir un correcto entrenamiento de los modelos.
+final_ts <- na.omit(filtered_ts) # Serie con todas las filtraciones.
+
+# PROCESO:
+# Partición y selección de intervalos.
+# Se buscan intervalos sin datos faltantes con una extensión satisfactoria.
+# RESULTADO:
+# Una serie de dataframes con frecuencia horaria regular.
+source("Rscripts/05_partition.R", echo = FALSE)
+
+intervals <- final_ts %>% IntervalFind(threshold = 6) %>% IntervalFilter(threshold = 500)
+
