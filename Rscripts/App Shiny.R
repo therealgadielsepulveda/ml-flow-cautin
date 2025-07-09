@@ -2,8 +2,8 @@
 # APLICACIÓN SHINY  - PREDICCIÓN DE CAUDAL CAJÓN
 # ======================================
 
-# ==== LIBRERÍAS ====
-library(shiny)
+# ==== PAQUETES ====
+library(shiny) 
 library(dplyr)
 library(lubridate)
 library(ggplot2)
