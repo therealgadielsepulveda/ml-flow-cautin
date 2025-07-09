@@ -165,7 +165,7 @@ server <- function(input, output, session) {
       arrange(FECHA_HORA)
   })
   
-  # Gráfico comparativo entre caudal observado y predicho
+  # Gráfico comparativo entre caudal observado y simulado
   output$grafico_caudal <- renderPlot({
     df <- datos_filtrados()
     req(df)

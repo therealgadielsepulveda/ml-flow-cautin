@@ -23,6 +23,6 @@ StrFromVar <- function(var) {
     gauge <- "Maquehue"
   }
   
-  desc <- list(label = varlab, gauge = gauge_list)
+  desc <- list(label = varlab, gauge = gauge)
   return(desc)
 }

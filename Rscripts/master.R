@@ -23,6 +23,7 @@ library(rmarkdown)
 library(xgboost)
 
 library(randomForest)
+library(caret)
 
 library(torch)
 library(luz)
@@ -112,5 +113,31 @@ final_ts <- na.omit(filtered_ts) # Serie con todas las filtraciones.
 # Una serie de dataframes con frecuencia horaria regular.
 source("Rscripts/05_partition.R", echo = FALSE)
 
-intervals <- final_ts %>% IntervalFind(threshold = 6) %>% IntervalFilter(threshold = 500)
+# Selección de intervalos de interés.
+intervals <- final_ts %>% IntervalFind(threshold = 6) %>% IntervalFilter(threshold = 1000)
 
+# Gráficos de intervalos de interés
+IntervalComparison(
+  db = intervals,
+  variables = variables,
+  color_list = c("")
+)
+
+# PROCESO:
+# Entrenamiento y validación de modelo xgboost
+
+# PROCESO:
+# Entrenamiento y validación de modelo randomforest
+
+# PROCESO:
+# Entrenamiento y validación de modelo LSTM
+
+# PROCESO:
+# Comparación de rendimiento de modelos
+# Se usan métricas de error para comparar valores observados y simulados.
+
+# PROCESO:
+# Comparación de valores observados y simulados
+
+# PROCESO:
+# Implementación de aplicación web

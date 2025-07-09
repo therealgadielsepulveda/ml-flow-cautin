@@ -90,54 +90,26 @@ GlobalSummary <- function(df) {
 # ARGUMENTOS
 # - df: dataframe de datos.
 TSBasicPlot <- function(
+    
     df,
     var,
+    color,
     # El intervalo predeterminado es el rango de fechas de la serie, si existe.
     interval = ifelse(
       test = is.element(el = "Fecha", set = colnames(df)),
       yes = range(df$Fecha),
       no = NULL
-    ),
-    dir,
-    filename,
-    filetype = ".pdf"
+    )
     ) {
   
-  varlab <- StrFromVar(var)$label
-  gauge <- StrFromVar(var)$gauge
-  
-  title <- paste0("Evolución de ", str_to_lower(varlab), " en estación ", gauge)
-  
-  var <- as.name(var)
-  
-  # Se generará un gráfico sólo si efectivamente existen datos.
-  if (!is.null(interval) & is.numeric(df[[var]])) {
+  if (!is.null(interval)) {
     
-    # Uso de tipografía congruente con informe.
-    par(family = "Times")
- 
-    # Generación de archivo .pdf
-    if (filetype == ".pdf") {
-      pdf(
-        file = paste(dir, var, filename, filetype, sep = "_"),
-        width = 6, height = 4,
-        onefile = TRUE,
-        family = "Times"
-        
-      )
-      
-    } else {
-      if (filetype == ".png") {
-        png(
-          file = paste(dir, var, filename, filetype, sep = "_"),
-          width = 1080, height = 720, units = "px",
-          family = "Times"
-        )
-      } else {
-        message("Tipo de archivo no válido.") # No se permitirán otros tipos de archivo.
-        break 
-      }
-    }
+    varlab <- StrFromVar(var)$label
+    gauge <- StrFromVar(var)$gauge
+    
+    title <- paste0("Evolución de ", str_to_lower(varlab), " en estación ", gauge)
+    
+    var <- as.name(var)
     
     # Carga gráfico
     plot(
@@ -149,11 +121,52 @@ TSBasicPlot <- function(
       xlim = interval,
       ylim = c(0, max(df[[var]])),
       type = "l",
-      col = "#4489FB",
+      col = color,
       lwd = 2,
       cex = 0.75
     )
     
+  } else {
+    message("No se generó gráfico.")
+  }
+  
+}
+
+IntervalComparison <- function(
+    db,
+    variables,
+    color_list = rep("#2299AA", length(variables)),
+    dir = "Resultados/Figuras/"
+  ) {
+  
+  for (index in 1:length(db)) {
+    
+    
+    pdf(
+      file = paste0(dir, "I", index, "_EDA", ".pdf"),
+      family = "Times",
+      paper = "a4",
+      onefile = TRUE
+    )
+    
+    par(mfcol = c(2,1)) # Layout de dos filas y dos columnas
+    
+    map2(variables,
+         color_list,
+           function(var, color, df = db[[index]]) {
+             TSBasicPlot(
+               df = df,
+               var = var,
+               col = color,
+               interval = range(df$Fecha)
+             )
+           }
+           )
+    
     dev.off()
   }
+  
 }
+    
+    
+                        
