@@ -3,7 +3,8 @@ ModelComparison <- function(
     df,
     start,
     end,
-    n_steps
+    n_steps,
+    save = TRUE
     ) {
 
   comparison <- vector(mode = "list", length = 0)
@@ -33,9 +34,14 @@ ModelComparison <- function(
       FUN = function (x) RMSECalc(x, comparison$data$Obs))
   )
   
+  if (save == TRUE) {
+    saveRDS(object = comparison, file = "Resultados/comparison.rds")
+  }
+  
   return(comparison)
 }
 
+# Gráfica de comparación para figura.
 ComparisonPlot <- function(comparison, models, dir) {
   
   data <- comparison$data

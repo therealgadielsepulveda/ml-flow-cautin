@@ -1,3 +1,7 @@
+library(viridisLite)
+library(tidyverse)
+library(xts)
+
 ui <- fluidPage(
   titlePanel("Serie fija + series opcionales (reactivo)"),
   sidebarLayout(
@@ -8,6 +12,14 @@ ui <- fluidPage(
         label = "Modelos a comparar",
         choices = c("XGB", "RF", "LSTM"),
         selected = c("XGB", "RF")
+      ),
+      dateRangeInput(
+        inputId = "rango_fechas",
+        label = "Selecciona el rango de fechas:",
+        start = "2013-10-13",
+        end   = "2014-06-30",
+        min   = "2013-10-13",
+        max   = "2014-07-28"
       )
     ),
     mainPanel(
@@ -19,12 +31,19 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+  comparison <- readRDS("shiny_app/comparison.rds")
+  data <- comparison$data
+  
   df_reactive <- reactive({
     # Siempre incluimos "Ref"
     selected_series <- c("Obs", input$series)
     print(selected_series)
     
-    data_comp <- xts(comparison$data, order.by = comparison$data$Fecha)
+    range <- as.POSIXct(
+      input$rango_fechas
+    )
+    
+    data_comp <- xts(data, order.by = data$Fecha)
     
     # Extrae esas columnas del xts
     xts_filt <- data_comp[, selected_series, drop = FALSE]
@@ -95,5 +114,13 @@ server <- function(input, output) {
   
 }
 
-shinyApp(ui, server)
-#deployApp(appDir = "Rscripts", appFiles = "ui.R", appTitle = "Nombre", appMode = "shiny", quarto = FALSE)
+rsconnect::deployApp(
+  appDir = "Rscripts",
+  appFiles = c(
+    "ui.R",
+    "shiny_app/comparison.rds"
+  ),
+  appName = "ml_flow",
+  appMode = "shiny",
+  quarto = FALSE
+)

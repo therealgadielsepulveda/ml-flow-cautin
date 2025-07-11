@@ -41,7 +41,7 @@ library(terra)
 # CAMBIO DE DIRECTORIO DE TRABAJO
 # Ajuste el directorio de trabajo local aquí.
 # Debe ser la ruta absoluta al directorio del proyecto en el equipo.
-# setwd(ruta)
+setwd("/Users/gadielsepulveda/Documents/ml-flow-cautin")
 # ---
 
 # PROCESO:
@@ -94,9 +94,8 @@ clean_precipitation <- P_ProcessAll(
 # Remoción de datos crudos.
 rm(raw_discharge, raw_precipitation)
 # Remoción de funciones de lectura de archivos.
-rm(ReadDischarge, ReadPrecipitation, ReadRawSheet)
+
 # Remoción de funciones de manipulación.
-rm(P_Conversion, P_DateCut, P_ProcessAll, D_ColStack, D_JoinByGauge, D_YMAppend, D_YMDetect, D_ProcessAll)
 
 # PROCESO:
 # Combinación de series temporales
@@ -156,6 +155,7 @@ lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 250)
 # Se usan métricas de error para comparar valores observados y simulados.
 # Además, se crea una serie temporal que permite su comparación.
 source("Rscripts/07_error_metrics.R")
+source("Rscripts/08_model_comparison.R")
 
 comparison <- ModelComparison(
   df = intervals[[3]], # periodo de referencia,
@@ -165,4 +165,16 @@ comparison <- ModelComparison(
 )
 
 # PROCESO:
+# Exportación de tablas a formato LaTeX
+source("Rscripts/09_others.R")
+TableToLaTeX(comparison$main, "Resultados/Tablas/comp.tex")
+TableToLaTeX(comparison$metrics, "Resultados/Tablas/metr.tex")
+TableToLaTeX(highlights$Num, "Resultados/Tablas/num.tex")
+TableToLaTeX(highlights$Cat, "Resultados/Tablas/cat.tex")
+
+# PROCESO:
 # Implementación de aplicación web
+# Esto abrirá una implementación local de la aplicación.
+# La versión web puede visitarse desde el enlace compartido en el informe.
+source("Rscripts/10_shiny_app.R")
+shinyApp(ui, server)

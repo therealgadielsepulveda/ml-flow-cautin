@@ -28,3 +28,7 @@ StrFromVar <- function(var) {
 }
 
 # Genera código LaTeX a partir de un dataframe o tibble dado.
+TableToLaTeX <- function(df, path) {
+  code <- kbl(df, "latex", col.names = colnames(df))
+  save_kable(code, path)
+}

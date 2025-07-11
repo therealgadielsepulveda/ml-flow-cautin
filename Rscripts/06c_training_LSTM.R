@@ -1,3 +1,5 @@
+install_torch(reinstall = TRUE)
+
 # CLASE:
 # - Creación de tensores con forma apropiada para el entrenamiento.
 # ENTRADAS:
