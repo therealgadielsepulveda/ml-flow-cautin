@@ -2,32 +2,37 @@
 # Este llama a todo el procesamiento y lanza la aplicación web con todas sus funcionalidades.
 
 # PAQUETES REQUERIDOS:
+
 # conflicted para manejar conflictos entrre funciones del mismo nombre de diferentes paquetes.
-
-# readxl, tidyverse, hydroTSM para manejo de datos
-# xgboost para modelado por potenciación de gradiente
-# randomForest para modelado por árboles aleatorios
-# torch, luz para modelado LSTM
-
 library(conflicted)
 
 conflicts_prefer(dplyr::filter, stats::lag)
 
+# Paquetes para manipulación y análisis exploratorio de datos
 library(readxl)
 library(tidyverse)
 
+# Paquetes para producción de reportes y tablas.
 library(knitr)
 library(kableExtra)
 library(rmarkdown)
 
+# Paquete para implementación de modelo xgboost.
 library(xgboost)
 
+# Paquetes para implementación de modelo RandomForest.
 library(randomForest)
 library(caret)
 
+# Paquetes para implementación de modelo LSTM.
+library(tibble)
+library(tsibble)
+library(feasts)
 library(torch)
 library(luz)
 
+# Paquetes para implementación de aplicación.
+library(shiny)
 library(terra)
 # ---
 
@@ -125,6 +130,7 @@ IntervalComparison(
 
 # PROCESO:
 # Entrenamiento y validación de modelo xgboost
+
 
 # PROCESO:
 # Entrenamiento y validación de modelo randomforest
