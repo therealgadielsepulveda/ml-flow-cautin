@@ -5,10 +5,12 @@
 # - steps: pasos predictivos, necesario para recortar las observaciones no predichas.
 # RESULTADO:
 # - coeficiente NSE para el modelo.
-NSECalc <- function(obs, sim, n_steps) {
-  
-  obs_trim <- obs[(n_steps+1):length(obs)]
-  sim <- na.omit(sim)
-  NSE = (1 - sum((obs_trim-sim)^2)/sum((obs_trim - mean(obs_trim))^2))
+NSECalc <- function(obs, sim) {
+  NSE <- (1 - sum((obs-sim)^2)/sum((obs - mean(obs))^2))
   return(NSE)
+}
+
+RMSECalc <- function(obs, sim) {
+  RMSE <- sqrt(sum((obs-sim)^2)/length(obs))
+  return(RMSE)
 }

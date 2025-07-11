@@ -32,6 +32,7 @@ library(torch)
 library(luz)
 
 # Paquetes para implementación de aplicación.
+library(rsconnect)
 library(shiny)
 library(terra)
 # ---
@@ -92,6 +93,10 @@ clean_precipitation <- P_ProcessAll(
 
 # Remoción de datos crudos.
 rm(raw_discharge, raw_precipitation)
+# Remoción de funciones de lectura de archivos.
+rm(ReadDischarge, ReadPrecipitation, ReadRawSheet)
+# Remoción de funciones de manipulación.
+rm(P_Conversion, P_DateCut, P_ProcessAll, D_ColStack, D_JoinByGauge, D_YMAppend, D_YMDetect, D_ProcessAll)
 
 # PROCESO:
 # Combinación de series temporales
@@ -119,31 +124,45 @@ final_ts <- na.omit(filtered_ts) # Serie con todas las filtraciones.
 source("Rscripts/05_partition.R", echo = FALSE)
 
 # Selección de intervalos de interés.
+# Se seleccionaron intervalos con 1.000 o más observaciones.
 intervals <- final_ts %>% IntervalFind(threshold = 6) %>% IntervalFilter(threshold = 1000)
 
 # Gráficos de intervalos de interés
-IntervalComparison(
-  db = intervals,
-  variables = variables,
-  color_list = c("")
-)
+
 
 # PROCESO:
 # Entrenamiento y validación de modelo xgboost
-
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06a_training_xgb.R")
+xgb <- XGB_Full(db = intervals, n_steps = 28, n_rounds = 12)
 
 # PROCESO:
 # Entrenamiento y validación de modelo randomforest
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06b_training_rf.R")
+rf <- RF_Full(db = intervals, n_steps = 28, ntree = 500)
 
 # PROCESO:
 # Entrenamiento y validación de modelo LSTM
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06c_training_LSTM.R")
+lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 250)
 
 # PROCESO:
 # Comparación de rendimiento de modelos
 # Se usan métricas de error para comparar valores observados y simulados.
+# Además, se crea una serie temporal que permite su comparación.
+source("Rscripts/07_error_metrics.R")
 
-# PROCESO:
-# Comparación de valores observados y simulados
+comparison <- ModelComparison(
+  df = intervals[[3]], # periodo de referencia,
+  start = min(intervals[[3]]$Fecha),
+  end = max(intervals[[3]]$Fecha),
+  n_steps = 28
+)
 
 # PROCESO:
 # Implementación de aplicación web

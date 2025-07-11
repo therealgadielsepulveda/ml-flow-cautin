@@ -26,3 +26,5 @@ StrFromVar <- function(var) {
   desc <- list(label = varlab, gauge = gauge)
   return(desc)
 }
+
+# Genera código LaTeX a partir de un dataframe o tibble dado.

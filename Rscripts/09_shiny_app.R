@@ -1,95 +1,11 @@
 # ======================================
-# APLICACIÓN SHINY  - PREDICCIÓN DE CAUDAL CAJÓN
-# ======================================
-
-# ==== PAQUETES ====
-library(shiny) 
-library(dplyr)
-library(lubridate)
-library(ggplot2)
-library(glue)
-library(xgboost)
-library(tidyr)
-
-# ======================================
-# PREPARACIÓN DE DATOS: CREACIÓN DE DESFASADOS
-# ======================================
-
-# crear variables desfasadas (lags) para cada columna en "columnas",
-# usando los desfases definidos en "desfases" (0h, 3h, 6h, 9h, 12h)
-crear_desfases <- function(df, columnas, desfases) {
-  for (col in columnas) {
-    for (h in desfases) {
-      df[[paste0(col, "_lag", h)]] <- dplyr::lag(df[[col]], h)
-    }
-  }
-  return(df)
-}
-
-# Definir los desfases y las variables a desfasar
-
-
-# Desfases en horas
-desfases <- c(0, 3, 6, 9, 12)
-
-# Variables usadas como predictores
-columnas <- c("CAUDAL_RARI_RUCA", "CAUDAL_RIO_BLANCO", "PRECIPITACION")
-
-# Cargamos el dataframe global ("datos_completos")
-# y genera las variables desfasadas para todo el conjunto
-
-df_predictivo <- datos_completos %>%
-  arrange(FECHA_HORA) %>%
-  crear_desfases(columnas, desfases) %>%
-  drop_na()  # se quitan las filas incompletas
-
-# ======================================
-# FUNCIÓN PARA PREDECIR CON XGBOOST
-# ======================================
-
-# función que carga el modelo correspondiente al desfase
-# y predice el caudal de Cajón. 
-predecir_caudal_cajon <- function(paso_predictivo) {
-  # Nombre del modelo a cargar
-  modelo_nombre <- paste0("modelo_", paso_predictivo, "h.model")
-  modelo <- xgb.load(modelo_nombre)
-  
-  # se definen las variables exactas que el modelo necesita
-  features <- c(
-    paste0("CAUDAL_RARI_RUCA_lag", paso_predictivo),
-    paste0("CAUDAL_RIO_BLANCO_lag", paso_predictivo),
-    paste0("PRECIPITACION_lag", paso_predictivo)
-  )
-  
-  # Creamos la variable objetivo: caudal en el futuro (desplazado hacia adelante)
-  datos <- df_predictivo %>%
-    mutate(CAUDAL_OBJ = dplyr::lead(CAUDAL_CAJON, paso_predictivo)) %>%
-    drop_na()
-  
-  # Creamos matrices de entrada y salida
-  X <- as.matrix(datos %>% select(all_of(features)))
-  fechas <- datos$FECHA_HORA
-  y <- datos$CAUDAL_OBJ
-  
-  # Generamos predicciones
-  pred <- predict(modelo, newdata = X)
-  
-  # Devolvemos dataframe con resultados
-  df_resultado <- data.frame(
-    FECHA_HORA = fechas,
-    CAUDAL_OBJ = y,
-    PRED_CAUDAL = pred
-  )
-  
-  return(list(resultados = df_resultado))
-}
-
-# ======================================
 # UI DE LA APLICACIÓN SHINY
 # ======================================
 
 ui <- fluidPage(
-  titlePanel("Predicción de Caudal Río Cajón - Modelos"),
+  
+  titlePanel("Uso de modelos de aprendizaje automático para la predicción de caudales en el Río Cautín utilizando R"),
+  
   sidebarLayout(
     sidebarPanel(
       
@@ -133,11 +49,14 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  resultados_modelo <- reactive({
+  prediction <- reactive({
     req(input$modelo)
     
     if (input$modelo == "xgboost") {
-      resultado <- predecir_caudal_cajon(paso_predictivo = input$paso)
+      
+      model <- readRDS("Resultados/Modelos/xgb_28s.rds")
+      prediction <- predict(object = model, newdata = features)
+      
       return(resultado$resultados)
       
     } else {
