@@ -1,0 +1,48 @@
+---
+title: "Reporte de Modelos de Predicción de Caudales"
+output: pdf_document
+params:
+  df: NA
+  df2: NA
+  metrics: NA
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+```
+
+Informe de Predicción de Caudales
+
+Este reporte muestra los resultados de los modelos de aprendizaje automático aplicados para predecir el caudal del río Cautín, en el período de tiempo seleccionado por el usuario.
+
+## Tabla de datos seleccionados
+
+A continuación, se presentan las primeras 50 observaciones del período seleccionado:
+```{r}
+params$df2 %>%
+  head(50) %>%
+  knitr::kable(caption = "Primeras 50 observaciones del período seleccionado")
+
+```
+
+## Comparación: Caudal observado vs. simulado
+
+El siguiente gráfico muestra la comparación entre el caudal observado y los valores predichos por los modelos seleccionados:
+
+```{r}
+ggplot(params$df, aes(x = Fecha, y = Valor, color = Serie)) +
+  geom_line(size = 1) +
+  labs(title = "Comparación de caudal observado vs predicho",
+       x = "Fecha", y = "Caudal") +
+  theme_minimal()
+```
+
+## Métricas de Evaluación (NSE y RMSE)
+
+Se presentan las métricas de evaluación de desempeño de cada modelo (NSE y RMSE):
+```{r}
+params$metrics %>%
+  knitr::kable(caption = "Métricas de evaluación por modelo (NSE y RMSE)")
+
+```
+

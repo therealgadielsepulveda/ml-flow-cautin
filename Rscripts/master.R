@@ -42,6 +42,7 @@ library(terra)
 # Ajuste el directorio de trabajo local aquí.
 # Debe ser la ruta absoluta al directorio del proyecto en el equipo.
 setwd("/Users/gadielsepulveda/Documents/ml-flow-cautin")
+work_dir <- getwd()
 # ---
 
 # PROCESO:
@@ -166,15 +167,16 @@ comparison <- ModelComparison(
 
 # PROCESO:
 # Exportación de tablas a formato LaTeX
+# Algunas se usaron para análisis interno solamente.
 source("Rscripts/09_others.R")
 TableToLaTeX(comparison$main, "Resultados/Tablas/comp.tex")
 TableToLaTeX(comparison$metrics, "Resultados/Tablas/metr.tex")
 TableToLaTeX(highlights$Num, "Resultados/Tablas/num.tex")
 TableToLaTeX(highlights$Cat, "Resultados/Tablas/cat.tex")
 
+saveRDS(comparison, "Rscripts/App/comparison.rds")
 # PROCESO:
 # Implementación de aplicación web
 # Esto abrirá una implementación local de la aplicación.
 # La versión web puede visitarse desde el enlace compartido en el informe.
-source("Rscripts/10_shiny_app.R")
-shinyApp(ui, server)
+shinyAppFile("Rscripts/App/10_shiny_app.R")
