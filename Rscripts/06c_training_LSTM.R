@@ -1,4 +1,4 @@
-install_torch(reinstall = TRUE)
+# Esta implementación normaliza las entradas y salidas.
 
 # CLASE:
 # - Creación de tensores con forma apropiada para el entrenamiento.
@@ -13,10 +13,18 @@ DataTensorGen <- dataset(
   name = "DataTensorGen", # Nombre de la clase dataset.
   
   # Creación de la estructura de datos.
-  initialize = function(data, n_steps, sample_frac = 1) {
+  initialize = function(
+    data,
+    n_steps,
+    train_mean,
+    train_sd,
+    sample_frac = 1
+    ) {
     
     self$n_steps <- n_steps
-    self$data <- torch_tensor(data)
+    
+    # Se incorpora una normalización de los datos.
+    self$data <- torch_tensor((data - train_mean)/train_sd)
     
     n <- (self$data)$size(1) - n_steps
     
@@ -83,10 +91,14 @@ LSTMModelGen <- nn_module(
 # FUNCIONES
 
 # Creación de tensores a partir de intervalos seleccionados.
-LSTM_TensorFromDF <- function(df, n_steps) {
+LSTM_TensorFromDF <- function(df, n_steps, train_mean, train_sd) {
+  train_mean <- train_mean
+  train_sd <- train_sd
   tensor <- DataTensorGen(
     df %>% select(MAQ_P, BCC_Q, CRR_Q, CJN_Q) %>% as.matrix(),
-    n_steps = n_steps
+    n_steps = n_steps,
+    train_mean = train_mean,
+    train_sd = train_sd
   )
   return(tensor)
 }
@@ -100,12 +112,20 @@ LSTM_Loader <- function(tensor) {
 
 # Condensa las dos funciones anteriores para una lista de tres conjuntos de datos,
 # donde el primero será de entrenamiento, el segundo de validación y el tercero de prueba.
-LSTM_CreateAllSets <- function(db, n_steps, save.image = TRUE) {
+LSTM_CreateAllSets <- function(
+    db,
+    n_steps,
+    train_mean,
+    train_sd
+    ) {
+  
+  train_mean <- train_mean
+  train_sd <- train_sd
   
   lstm_tensors <- vector(mode = "list", length = 0)
-  lstm_tensors$train <- db[[1]] %>% LSTM_TensorFromDF(n_steps = n_steps)
-  lstm_tensors$validation <- db[[2]] %>% LSTM_TensorFromDF(n_steps = n_steps)
-  lstm_tensors$test <- db[[3]] %>% LSTM_TensorFromDF(n_steps = n_steps)
+  lstm_tensors$train <- db[[1]] %>% LSTM_TensorFromDF(n_steps = n_steps, train_mean, train_sd)
+  lstm_tensors$validation <- db[[2]] %>% LSTM_TensorFromDF(n_steps = n_steps, train_mean, train_sd)
+  lstm_tensors$test <- db[[3]] %>% LSTM_TensorFromDF(n_steps = n_steps, train_mean, train_sd)
   
   lstm_loaders <- lapply(lstm_tensors, FUN = LSTM_Loader)
   
@@ -144,7 +164,7 @@ LSTM_Train <- function(train_loader, valid_loader, trainer, epochs = 200) {
         luz::luz_callback_lr_scheduler(
           torch::lr_one_cycle,
           max_lr = 0.01,
-          epochs = 200,
+          epochs = epochs,
           steps_per_epoch = length(train_loader),
           call_on = "on_batch_end"
         )
@@ -163,21 +183,40 @@ LSTM_RL <- function(train_loader, trainer) {
 }
 
 # Realiza predicciones con un modelo entrenado y un conjunto de prueba.
-LSTM_Predict <- function(fitted_model, test_loader, n_steps) {
+LSTM_Predict <- function(
+    fitted_model,
+    test_loader,
+    n_steps,
+    train_mean,
+    train_sd) {
   
-  prediction <- predict(fitted_model, test_loader)
-  pred <- prediction$to(device = "cpu") %>% as.matrix()
-  pred <- c(rep(NA, n_steps), pred)
+  prediction_tensor <- predict(fitted_model, test_loader)
   
-  return(pred)
+  # Se deshace la normalización.
+  prediction_norm <- prediction_tensor$to(device = "cpu") %>% as.matrix()
+  prediction <- prediction_norm * train_sd + train_mean
+  prediction <- c(rep(NA, n_steps), prediction)
+  
+  return(prediction)
   
 }
 
-LSTM_Full <- function(db, n_steps, epochs, save.model = TRUE, save.prediction = TRUE) {
+# Genera un modelo y una predicción en base a tres conjuntos de datos.
+# ARGUMENTOS:
+# db: Lista de tres dataframes, uno de entrenamiento, uno de validación, y uno de prueba, en ese estricto orden.
+LSTM_Full <- function(
+    db,
+    n_steps,
+    epochs,
+    save.model = TRUE,
+    save.prediction = TRUE) {
+  
+  train_mean <- mean(db[[1]]$CJN_Q)
+  train_sd <- sd(db[[1]]$CJN_Q)
   
   # Creador de tensores y cargadores de información.
-  trainers <- LSTM_CreateAllSets(db = db, n_steps= n_steps)[[1]]
-  loaders <- LSTM_CreateAllSets(db = db, n_steps = n_steps)[[2]]
+  trainers <- LSTM_CreateAllSets(db = db, n_steps= n_steps, train_mean, train_sd)[[1]]
+  loaders <- LSTM_CreateAllSets(db = db, n_steps = n_steps, train_mean, train_sd)[[2]]
   
   trainer <- LSTM_Trainer(input_size = 3, hidden_size = 64, num_layers = 3, rec_dropout = 0)
   model <- LSTM_Train(loaders$train, loaders$validation, trainer, epochs = epochs)
@@ -188,7 +227,13 @@ LSTM_Full <- function(db, n_steps, epochs, save.model = TRUE, save.prediction = 
     message("Se guardó un archivo con el modelo en ", path)
   }
   
-  prediction <- LSTM_Predict(fitted_model = model, test_loader = loaders[[3]], n_steps = n_steps)
+  prediction <- LSTM_Predict(
+    fitted_model = model,
+    test_loader = loaders[[3]],
+    n_steps = n_steps,
+    train_mean = train_mean,
+    train_sd = train_sd
+    )
   
   if (save.prediction == TRUE) {
     path <- paste0("Resultados/Modelos/LSTM_prediction_",n_steps,".rds")

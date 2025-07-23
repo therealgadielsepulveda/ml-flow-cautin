@@ -149,7 +149,7 @@ rf <- RF_Full(db = intervals, n_steps = 28, ntree = 500)
 # RESULTADO:
 # Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
 source("Rscripts/06c_training_LSTM.R")
-lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 250)
+lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 100)
 
 # PROCESO:
 # Comparación de rendimiento de modelos
