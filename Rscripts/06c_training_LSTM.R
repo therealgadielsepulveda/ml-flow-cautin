@@ -157,13 +157,13 @@ LSTM_Train <- function(train_loader, valid_loader, trainer, epochs = 200) {
   fitted <- trainer %>%
     luz::fit(
       train_loader,
-      epochs = epochs,
+      epochs = c(20, epochs),
       valid_data = valid_loader,
       callbacks = list(
-        luz::luz_callback_early_stopping(patience = 3),
+        luz::luz_callback_early_stopping(patience = 5),
         luz::luz_callback_lr_scheduler(
           torch::lr_one_cycle,
-          max_lr = 0.01,
+          max_lr = 0.045,
           epochs = epochs,
           steps_per_epoch = length(train_loader),
           call_on = "on_batch_end"
@@ -218,7 +218,7 @@ LSTM_Full <- function(
   trainers <- LSTM_CreateAllSets(db = db, n_steps= n_steps, train_mean, train_sd)[[1]]
   loaders <- LSTM_CreateAllSets(db = db, n_steps = n_steps, train_mean, train_sd)[[2]]
   
-  trainer <- LSTM_Trainer(input_size = 3, hidden_size = 64, num_layers = 3, rec_dropout = 0)
+  trainer <- LSTM_Trainer(input_size = 3, hidden_size = 32, num_layers = 2, rec_dropout = 0)
   model <- LSTM_Train(loaders$train, loaders$validation, trainer, epochs = epochs)
   
   if (save.model == TRUE) {

@@ -149,7 +149,7 @@ rf <- RF_Full(db = intervals, n_steps = 28, ntree = 500)
 # RESULTADO:
 # Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
 source("Rscripts/06c_training_LSTM.R")
-lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 100)
+lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 40)
 
 # PROCESO:
 # Comparación de rendimiento de modelos
@@ -179,4 +179,5 @@ saveRDS(comparison, "Rscripts/App/comparison.rds")
 # Implementación de aplicación web
 # Esto abrirá una implementación local de la aplicación.
 # La versión web puede visitarse desde el enlace compartido en el informe.
-shinyAppFile("Rscripts/App/10_shiny_app.R")
+app <- shinyAppFile("Rscripts/App/10_shiny_app.R")
+runApp(appDir = app)
