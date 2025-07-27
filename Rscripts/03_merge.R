@@ -10,7 +10,6 @@ TSMerge <- function(db) {
       merge(x,y, by = "Fecha", all = TRUE)
       },
     db,
-    simplify=FALSE
   )
   
   synced_df <- merged_df %>% 

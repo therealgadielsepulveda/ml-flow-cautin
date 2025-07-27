@@ -2,32 +2,38 @@
 # Este llama a todo el procesamiento y lanza la aplicación web con todas sus funcionalidades.
 
 # PAQUETES REQUERIDOS:
+
 # conflicted para manejar conflictos entrre funciones del mismo nombre de diferentes paquetes.
-
-# readxl, tidyverse, hydroTSM para manejo de datos
-# xgboost para modelado por potenciación de gradiente
-# randomForest para modelado por árboles aleatorios
-# torch, luz para modelado LSTM
-
 library(conflicted)
 
 conflicts_prefer(dplyr::filter, stats::lag)
 
+# Paquetes para manipulación y análisis exploratorio de datos
 library(readxl)
 library(tidyverse)
 
+# Paquetes para producción de reportes y tablas.
 library(knitr)
 library(kableExtra)
 library(rmarkdown)
 
+# Paquete para implementación de modelo xgboost.
 library(xgboost)
 
+# Paquetes para implementación de modelo RandomForest.
 library(randomForest)
 library(caret)
 
+# Paquetes para implementación de modelo LSTM.
+library(tibble)
+library(tsibble)
+library(feasts)
 library(torch)
 library(luz)
 
+# Paquetes para implementación de aplicación.
+library(rsconnect)
+library(shiny)
 library(terra)
 # ---
 
@@ -35,7 +41,8 @@ library(terra)
 # CAMBIO DE DIRECTORIO DE TRABAJO
 # Ajuste el directorio de trabajo local aquí.
 # Debe ser la ruta absoluta al directorio del proyecto en el equipo.
-# setwd(ruta)
+setwd("/Users/gadielsepulveda/Documents/ml-flow-cautin")
+work_dir <- getwd()
 # ---
 
 # PROCESO:
@@ -87,6 +94,9 @@ clean_precipitation <- P_ProcessAll(
 
 # Remoción de datos crudos.
 rm(raw_discharge, raw_precipitation)
+# Remoción de funciones de lectura de archivos.
+
+# Remoción de funciones de manipulación.
 
 # PROCESO:
 # Combinación de series temporales
@@ -114,30 +124,60 @@ final_ts <- na.omit(filtered_ts) # Serie con todas las filtraciones.
 source("Rscripts/05_partition.R", echo = FALSE)
 
 # Selección de intervalos de interés.
+# Se seleccionaron intervalos con 1.000 o más observaciones.
 intervals <- final_ts %>% IntervalFind(threshold = 6) %>% IntervalFilter(threshold = 1000)
 
 # Gráficos de intervalos de interés
-IntervalComparison(
-  db = intervals,
-  variables = variables,
-  color_list = c("")
-)
+
 
 # PROCESO:
 # Entrenamiento y validación de modelo xgboost
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06a_training_xgb.R")
+xgb <- XGB_Full(db = intervals, n_steps = 28, n_rounds = 12)
 
 # PROCESO:
 # Entrenamiento y validación de modelo randomforest
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06b_training_rf.R")
+rf <- RF_Full(db = intervals, n_steps = 28, ntree = 500)
 
 # PROCESO:
 # Entrenamiento y validación de modelo LSTM
+# RESULTADO:
+# Modelo listo para hacer predicciones y predicción sobre intervalo de prueba.
+source("Rscripts/06c_training_LSTM.R")
+lstm <- LSTM_Full(db = intervals, n_steps = 28, epochs = 40)
 
 # PROCESO:
 # Comparación de rendimiento de modelos
 # Se usan métricas de error para comparar valores observados y simulados.
+# Además, se crea una serie temporal que permite su comparación.
+source("Rscripts/07_error_metrics.R")
+source("Rscripts/08_model_comparison.R")
+
+comparison <- ModelComparison(
+  df = intervals[[3]], # periodo de referencia,
+  start = min(intervals[[3]]$Fecha),
+  end = max(intervals[[3]]$Fecha),
+  n_steps = 28
+)
 
 # PROCESO:
-# Comparación de valores observados y simulados
+# Exportación de tablas a formato LaTeX
+# Algunas se usaron para análisis interno solamente.
+source("Rscripts/09_others.R")
+TableToLaTeX(comparison$main, "Resultados/Tablas/comp.tex")
+TableToLaTeX(comparison$metrics, "Resultados/Tablas/metr.tex")
+TableToLaTeX(highlights$Num, "Resultados/Tablas/num.tex")
+TableToLaTeX(highlights$Cat, "Resultados/Tablas/cat.tex")
 
+saveRDS(comparison, "Rscripts/App/comparison.rds")
 # PROCESO:
 # Implementación de aplicación web
+# Esto abrirá una implementación local de la aplicación.
+# La versión web puede visitarse desde el enlace compartido en el informe.
+app <- shinyAppFile("Rscripts/App/10_shiny_app.R")
+runApp(appDir = app)

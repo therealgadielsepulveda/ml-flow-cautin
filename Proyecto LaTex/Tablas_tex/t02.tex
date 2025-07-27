@@ -1,0 +1,38 @@
+\documentclass[varwidth=false]{standalone}
+
+% ======== Reproducimos estilo copernicus.cls ========
+
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}                 % Serif con soporte matemático (Times)
+\usepackage{times}
+\renewcommand{\familydefault}{\rmdefault} % Helvetica como texto por defecto, como en copernicus.cls
+\usepackage{courier}                 % Monoespaciada
+\usepackage{booktabs}                % Tablas con líneas finas
+\usepackage{siunitx}                 % Para alineación numérica
+\renewcommand{\baselinestretch}{1.2}
+
+% Ajuste fino de grosor de líneas en tablas
+\setlength{\arrayrulewidth}{0.4pt}
+\setlength{\tabcolsep}{6pt}
+
+\begin{document}
+\begin{tabular}{|l|r|r|r|r|}
+  \hline
+\textbf{Medida} & $Q_\mathrm{CRR}$ [m³/s] & $Q_\mathrm{CJN}$ [m³/s] & $Q_\mathrm{BCC}$ [m³/s] & $P_\mathrm{MAQ}$ [mm]\\
+  \hline
+  n & 235291 & 239047 & 231797 & 32866\\
+  \hline
+  NA & 0 & 0 & 0 & 159\\
+  \hline
+  mín & 22.24562 & 13.00220 & 0.032200 & 0.0\\
+  \hline
+  $Q_1$ & 35.85180 & 40.78800 & 2.613000 & 0.0\\
+  \hline
+  $Q_2$ & 62.79621 & 86.41446 & 5.552399 & 0.0\\
+  \hline
+  $Q_3$ & 99.50512 & 162.24280 & 10.16140 & 0.0\\
+  \hline
+  máx & 790.93695 & 1957.66973 & 134.66200 & 54.9\\
+  \hline
+\end{tabular}
+\end{document}
