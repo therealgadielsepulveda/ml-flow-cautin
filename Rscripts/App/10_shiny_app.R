@@ -13,6 +13,9 @@ conflicts_prefer(dplyr::filter)
 # Carga de datos obtenidos del análisis.
 comparison <- readRDS("data/comparison.rds")
 
+# Carga de funciones para cálculo de métricas.
+source("resources/metric_calc.R", echo = FALSE)
+
 # Tema definido en archivo.
 # Personaliza las fuentes y colores para incrementar la legibilidad.
 theme <- bs_theme(
@@ -131,7 +134,7 @@ server <- function(input, output) {
   })
   
   # Dataframe con sólo observaciones consideradas.
-  interval_df <- reactive({
+  FilteredData <- reactive({
     
     # Extrae las series a comparar.
     data <- comparison$data
@@ -144,8 +147,6 @@ server <- function(input, output) {
     date_filter <- index(data_comp) >= as.POSIXct(input$date_range[1], tz = "UTC") &
       index(data_comp) <= (as.POSIXct(x = input$date_range[2], tz = "UTC") + hours(24))
     
-    class(input$series); input$series
-    
     # DATAFRAME GENERAL
     # Filtración de datos.
     wide_df <- data_comp[date_filter, selected_series, drop = FALSE] %>%
@@ -155,6 +156,13 @@ server <- function(input, output) {
         Fecha = as.POSIXct(Fecha, tz = "UTC"),
         across(.cols = all_of(selected_series), .fns = as.numeric)
       )
+    return(wide_df)
+  })
+    
+  FilteredMetrics <- reactive({
+    
+    # Obtención de dataframe ancho.
+    wide_df <- FilteredData()
     
     # CÁLCULO DE MÉTRICAS DE ERROR
     NSEs <- sapply(
@@ -179,17 +187,39 @@ server <- function(input, output) {
       Intervalo = "Elegido"
     ) %>% 
       pivot_longer(cols = any_of(c("RMSE", "NSE")), names_to = "Métrica", values_to = "Valor")
-    #print(local_metrics)
+  
+    return(local_metrics)
+    
+  })
+  
+  AllMetrics <- reactive({
+    
+    # Carga de métricas locales
+    local_metrics <- FilteredMetrics()
+    
+    # Llamado de métricas obtenidas para el intervalo completo.
+    complete_metrics <- comparison$metrics %>% 
+      mutate(Modelo = c("XGB", "RF", "LSTM"), Intervalo = rep("Completo",3)) %>% 
+      select(-tags) %>%
+      filter(is.element(Modelo, set = input$series)) %>% 
+      pivot_longer(cols = c(RMSE, NSE), names_to = "Métrica", values_to = "Valor")
+    
+    metrics <- bind_rows(local_metrics, complete_metrics)
+    
+    return(metrics)
+  })
+  
+  DataForPlot <- reactive({
     
     # Dataframe para gráfico de series.
     # Este dataframe tiene la peculiaridad de que hay tres columnas:
     # Fecha, categoría (observado, LSTM, XGB o RF, y valor).
     # Esta organización facilita la manipulación por ggplot2.
     
-    long_df <- wide_df %>% # Conversión a dataframe
+    long_df <- FilteredData() %>% # Conversión a dataframe
       pivot_longer(cols = -Fecha, names_to = "Serie", values_to = "Valor")
     
-    return(list(ldf = long_df, wdf = wide_df, lm = local_metrics))
+    return(long_df)
   })
   
   
@@ -200,7 +230,7 @@ server <- function(input, output) {
   output$tsPlot <- renderPlot({
     
     # Datos procesados acorde a las necesidades del gráfico.
-    df_plot <- interval_df()$ldf
+    df_plot <- DataForPlot()
     
     # ESCALA DEL GRÁFICO
     # Las marcas en el eje de fecha varían en proporción a la longitud del intervalo.
@@ -239,7 +269,7 @@ server <- function(input, output) {
     # CREACIÓN DE GRÁFICO
     obsplot <- ggplot(df_plot, aes(x = Fecha, y = Valor, color = Serie)) +
       
-      geom_line(size = 1.2) +
+      geom_line(linewidth = 1.2) +
       
       scale_color_manual(values = palette_all, name = "Serie") +
       
@@ -267,25 +297,14 @@ server <- function(input, output) {
   # GRÁFICOS DE MÉTRICAS
   # Muestran los valores de las métricas de error en el intervalo seleccionado
   # y cómo se comparan con las métricas globales.
+  
+  
+  # NSE por modelo
   output$NSEPlot <- renderPlot({
-    
-    #print(comparison$metrics)
-    
-    local_metrics <- interval_df()$lm # Carga de métricas locales
-    
-    complete_metrics <- comparison$metrics %>% 
-      mutate(Modelo = c("XGB", "RF", "LSTM"), Intervalo = rep("Completo",3)) %>% 
-      select(-tags) %>%
-      filter(is.element(Modelo, set = input$series)) %>% 
-      pivot_longer(cols = c(RMSE, NSE), names_to = "Métrica", values_to = "Valor")
-    
-    metrics <- bind_rows(local_metrics, complete_metrics)
-    print(metrics)
+  
+    metrics <- AllMetrics()
     
     NSEs <- metrics %>% filter(Métrica == "NSE") %>% select(-Métrica)
-    RMSEs <- metrics %>% filter(Métrica == "RMSE") %>% select(-Métrica)
-    
-    #print(complete_metrics)
     
     ggplot(NSEs, aes(x = Modelo, y = Valor, fill = Intervalo)) +
       
@@ -300,25 +319,13 @@ server <- function(input, output) {
       ylim(min(0, NSEs$Valor),1)
   })
   
+  
+  # RMSE por modelo
   output$RMSEPlot <- renderPlot({
     
-    #print(comparison$metrics)
+    metrics <- AllMetrics()
     
-    local_metrics <- interval_df()$lm # Carga de métricas locales
-    
-    complete_metrics <- comparison$metrics %>% 
-      mutate(Modelo = c("XGB", "RF", "LSTM"), Intervalo = rep("Completo",3)) %>% 
-      select(-tags) %>%
-      filter(is.element(Modelo, set = input$series)) %>% 
-      pivot_longer(cols = c(RMSE, NSE), names_to = "Métrica", values_to = "Valor")
-    
-    metrics <- bind_rows(local_metrics, complete_metrics)
-    print(metrics)
-    
-    NSEs <- metrics %>% filter(Métrica == "NSE") %>% select(-Métrica)
     RMSEs <- metrics %>% filter(Métrica == "RMSE") %>% select(-Métrica)
-    
-    #print(complete_metrics)
     
     ggplot(RMSEs, aes(x = Modelo, y = Valor, fill = Intervalo)) +
       
@@ -334,25 +341,37 @@ server <- function(input, output) {
       ylim(0,max(RMSEs$Valor))
   })
   
+  
+  
+  # GENERACIÓN DE REPORTES AUTOMÁTICOS
   output$report <- downloadHandler(
+    
+    
     filename = function() {
-      paste0("reporte_modelos_", Sys.Date(), ".pdf")
+      return(paste0("reporte_modelos_", Sys.Date(), ".pdf"))
     },
+    
     content = function(file) {
+      
       # Copia el Rmd a tempdir
-      tempReport <- file.path(tempdir(), "resources/report_tmp.Rmd")
-      file.copy("reporte.Rmd", tempReport, overwrite = TRUE)
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      print(tempReport)
+      
+      file.copy("resources/report_tmp.Rmd", tempReport, overwrite = TRUE)
       
       # Ruta de salida temporal segura
       tempOutput <- tempfile(fileext = ".pdf")
       
+      # Parámetros para gráfico en reporte
       params <- list(
-        df = df_reactive(),
-        df2 = df2_reactive(),
-        metrics = comparison$metrics %>%
-          select(Modelo = tags, RMSE, NSE)
+        
+        wide_df = FilteredData(), # Serie completa, con columnas por tipo.
+        long_df = DataForPlot(), # Serie con tipo de observación siendo un valor.
+        metrics = AllMetrics() # Tabla con todas las métricas requeridas.
+        
       )
       
+      # Produce un documento.
       rmarkdown::render(
         tempReport,
         output_file = tempOutput,
@@ -365,4 +384,6 @@ server <- function(input, output) {
     }
   )
 }
+
+# Generación de objeto aplicación.
 shinyApp(ui, server)
