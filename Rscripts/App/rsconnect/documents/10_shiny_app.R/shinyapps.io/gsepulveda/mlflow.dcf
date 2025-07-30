@@ -5,7 +5,7 @@ account: gsepulveda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15064251
-bundleId: 10616275
+bundleId: 10691125
 url: https://gsepulveda.shinyapps.io/mlflow/
 version: 1
 asMultiple: FALSE
