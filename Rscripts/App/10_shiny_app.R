@@ -88,12 +88,7 @@ ui <- fluidPage(
         
         tabPanel(
           title = "Modelos",
-          h3("xgboost"),
-          div("Este modelo fue desarrollado por (), <a href=\"https://www.ejemplo.com\">Visita ejemplo.com</a>  consistente en árboles de decisión."),
-          h3("Random Forest"),
-          p("Este modelo, desarrollado por (2010), también se basa en árboles de decisión. Sin embargo,"),
-          h3("LSTM"),
-          p("Red neuronal desarrollado por Hochreiter y Schimhubler (1997).")
+          includeHTML("resources/model_description.html")
         ),
         
         # Gráfico de valores observados contra simulados.
@@ -373,7 +368,7 @@ server <- function(input, output) {
       
       # Produce un documento.
       rmarkdown::render(
-        tempReport,
+        input = tempReport,
         output_file = tempOutput,
         params = params,
         envir = new.env(parent = globalenv())
