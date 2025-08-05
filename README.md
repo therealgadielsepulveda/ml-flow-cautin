@@ -1,5 +1,5 @@
-# What is this about?
-Data, scripts and documents used for "Use of machine learning models for flow prediction in the Cautín River using R", my final project at the Applied Programming (IIO222), Fall 2025 course at Universidad de La Frontera ([UFRO](https://www.ufro.cl)). This projects consists on the evaluation of the accuracy of gradient boosting, random forest, and LSTM models for the runoff at the "Río Cautín en Cajón" gauge, based on information from gauges upstream and precipitations.
+# What is this about? (Work in progress)
+Data, scripts and documents used for "Use of machine learning models for flow prediction in the Cautín River using R". This projects consists on the evaluation of the accuracy of gradient boosting, random forest, and LSTM models for the runoff at the "Río Cautín en Cajón" gauge, based on information from gauges upstream and precipitations. It is based upon my final project for the course IIO222, Applied Programming, Fall 2025, from the civil engineering undergradute program at Universidad de La Frontera (UFRO, https://www.ufro.cl).
 
 # Testing
 ## Requirements
