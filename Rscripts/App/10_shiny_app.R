@@ -1,12 +1,24 @@
-library(bslib)
-library(shiny)
-library(tidyverse)
-library(xts)
-library(viridisLite)
-library(rmarkdown)
-library(conflicted)
-library(leaflet)
+# PAQUETES REQUERIDOS
+# Estos deben cargarse de forma local para la construcción y ejecución de la aplicación.
 
+library(bslib) # Carga de temas personalizados
+library(shiny) # Interfaz y lógica de servidor
+
+library(tidyverse) # Manipulación de datos
+library(xts)
+
+library(viridisLite) # Colores
+library(rmarkdown) # Reportes automáticos
+library(conflicted) # Resolución de conflictos entre paquetes
+
+# Mapa interactivo
+library(leaflet)
+library(sf)
+library(terra)
+
+# ---
+
+# Resolución de conflictos de funciones.
 conflicts_prefer(zoo::index)
 conflicts_prefer(dplyr::filter)
 
@@ -14,7 +26,13 @@ conflicts_prefer(dplyr::filter)
 comparison <- readRDS("data/comparison.rds")
 
 # Carga de funciones para cálculo de métricas.
-source("resources/metric_calc.R", echo = FALSE)
+source(file = "resources/metric_calc.R", echo = FALSE)
+
+# Carga de panel
+source(file = "resources/panel.R", local = TRUE)
+
+# Carga de mapa de estaciones
+source(file = "resources/map.R", local = TRUE)
 
 # Tema definido en archivo.
 # Personaliza las fuentes y colores para incrementar la legibilidad.
@@ -22,36 +40,6 @@ theme <- bs_theme(
   version = 5,
   brand = "resources/brand.yml"
 )
-
-# Panel lateral, que incluye las principales opciones:
-# - un selector de rango de fechas,
-# - un selector de modelos a analizar,
-# - y un botón que permite descargar toda la información asociada al periodo.
-panel <-  sidebarPanel(
-  h3("Instrucciones"),
-  p("La siguiente plataforma permite visualizar los resultados de los modelos implementados. Cada uno de ellos fue entrenado con información de las 28 horas previas, permitiendo una comparación con significado entre estos modelos."),
-  h3("Selección"),
-  checkboxGroupInput(
-    inputId = "series",
-    label = "Modelos mostrados",
-    choices = list("XGBoost" = "XGB", "Random Forest" = "RF", "LSTM" = "LSTM"),
-    selected =  list("XGBoost" = "XGB", "Random Forest" = "RF", "LSTM" = "LSTM")
-  ),
-  dateRangeInput(
-    inputId = "date_range",
-    label = "Intervalo de fechas",
-    start = "2014-01-01",
-    end   = "2014-06-30",
-    min   = "2013-10-13",
-    max   = "2014-07-28",
-    language = "es",
-    separator = "a"
-  ),
-  downloadButton("report", "Generar reporte")
-)
-
-# Mapa de estaciones
-gauge_map <- leaflet() %>% addTiles()
 
 # Interfaz de usuario
 ui <- fluidPage(
@@ -76,21 +64,6 @@ ui <- fluidPage(
       
       tabsetPanel(
         
-        # Descripción de la metodología y modelos
-        tabPanel(
-          title = "Variables",
-          h2("Estaciones"),
-          p(),
-          gauge_map,
-          p(""),
-          
-        ),
-        
-        tabPanel(
-          title = "Modelos",
-          includeHTML("resources/model_description.html")
-        ),
-        
         # Gráfico de valores observados contra simulados.
         tabPanel(
           title = "Series",
@@ -102,6 +75,27 @@ ui <- fluidPage(
           title = "Métricas",
           plotOutput(outputId = "NSEPlot"),
           plotOutput(outputId = "RMSEPlot")
+        ),
+        
+        # Descripción de las variables y estaciones.
+        tabPanel(
+          title = "Variables",
+          h2("Estaciones"),
+          gauge_map,
+          p(""),
+          
+        ),
+        
+        # Descripción de los modelos.
+        tabPanel(
+          title = "Modelos",
+          includeHTML("resources/model_description.html")
+        ),
+        
+        # Trabajos y paquetes citados.
+        tabPanel(
+          title = "Referencias",
+          includeHTML("resources/model_references.html")
         )
       )
       
@@ -123,7 +117,7 @@ server <- function(input, output) {
       updateDateRangeInput(
         session,
         inputId = "date_range",
-        end = start
+        start = end
       )
     }
   })
@@ -308,7 +302,7 @@ server <- function(input, output) {
       geom_text(aes(label = round(Valor, digits= 6)), parse = TRUE, vjust=1, color="#282828", position = position_dodge(1), size=6) +
       scale_fill_viridis_d(option = "C", begin = 0.6, end = 0.8) +
       labs(
-        title = "Coeficiente de eficiencia de Nash-Sutcliffe por modelo",
+        title = "Coeficiente de eficiencia de Nash-Sutcliffe (NSE) por modelo",
         y = "Valor", x = "Modelo"
       ) +
       ylim(min(0, NSEs$Valor),1)
@@ -329,7 +323,7 @@ server <- function(input, output) {
       scale_fill_viridis_d(option = "C", begin = 0.2, end = 0.4) +
       
       labs(
-        title = "Raíz del error cuadrático medio por modelo",
+        title = "Raíz del error cuadrático medio (RMSE) por modelo",
         y = "Valor", x = "Modelo"
       ) +
       theme_minimal(base_family = "Fira Sans", base_size = 18) +
