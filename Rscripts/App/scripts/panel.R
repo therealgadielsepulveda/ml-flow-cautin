@@ -3,8 +3,7 @@
 # - un selector de modelos a analizar,
 # - y un botón que permite descargar toda la información asociada al periodo.
 panel <-  sidebarPanel(
-  h3("Instrucciones"),
-  p("La siguiente plataforma permite visualizar los resultados de los modelos implementados. Cada uno de ellos fue entrenado con información de las 28 horas previas, permitiendo una comparación con significado entre estos modelos."),
+  includeHTML("html_content/panel_about.html"),
   h3("Selección"),
   checkboxGroupInput(
     inputId = "series",
@@ -22,5 +21,6 @@ panel <-  sidebarPanel(
     language = "es",
     separator = "a"
   ),
-  downloadButton("report", "Generar reporte")
+  downloadButton("report", "Generar reporte en PDF"),
+  includeHTML("html_content/panel_footer.html") # Información de proyecto.
 )

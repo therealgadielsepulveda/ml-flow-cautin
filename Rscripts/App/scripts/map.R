@@ -10,7 +10,8 @@ input_gauges <- data.frame(
   lon = c( -72.0103, -71.8675, -72.63194),
   tipo = "Input gauge",
   variable = c(rep("Caudal instantáneo [m³/s]", 2), "Precipitación acumulada [mm]"),
-  localidad = c("Curacautín", "Curacuatín", "Temuco")
+  localidad = c("Curacautín", "Curacuatín", "Padre Las Casas"),
+  org = c(rep("Dirección General de Aguas (DGA)", 2), "Dirección Meteorológica de Chile (DMC)")
 )
 
 # Estación de salida
@@ -20,7 +21,8 @@ output_gauges <- data.frame(
   lon = -72.5028,
   tipo = "Output gauge",
   variable = "Caudal instantáneo [m³/s]",
-  localidad = "Vilcún"
+  localidad = "Temuco",
+  org = "Dirección General de Aguas (DGA)"
 )
 
 # Creación de objetos correspondientes a ubicaciones de estaciones.
@@ -39,7 +41,7 @@ circle_icon <- makeIcon(
 )
 
 # Creación de mapa.
-gauge_map <- leaflet(options = leafletOptions(minZoom = 10)) %>%
+gauge_map <- leaflet(options = leafletOptions(minZoom = 7)) %>%
   
   #setView(
     #lng = mean(as.numeric(gauges$lon)),
@@ -47,7 +49,7 @@ gauge_map <- leaflet(options = leafletOptions(minZoom = 10)) %>%
     #zoom = 11
    # ) %>% 
   
-  setMaxBounds(lng1 = -74, lat1 = -37, lng2 = -70, lat2 = -39) %>% 
+  setMaxBounds(lng1 = -74, lat1 = -37.5, lng2 = -70, lat2 = -39.5) %>% 
   
   # Mapa base
   addProviderTiles("OpenStreetMap") %>%
@@ -59,14 +61,15 @@ gauge_map <- leaflet(options = leafletOptions(minZoom = 10)) %>%
   addMarkers(
     data = filter(gauges, tipo == "Input gauge"),
     icon = square_icon,
-    popup = ~paste0("<b>", nombre, "</b><br>", variable, "<br><i>", localidad, "</i>")
+    popup = ~paste0("<b>", nombre, "</b><br>", org, "<br>", variable, "<br><i>", localidad, "</i>"),
+    popupOptions = popupOptions(minWidth = 100, maxWidth = 400)
   ) %>%
   
   # Pluviométricas
   addMarkers(
     data = filter(gauges, tipo == "Output gauge"),
     icon = circle_icon,
-    popup = ~paste0("<b>", nombre, "</b><br>", variable, "<br><i>", localidad, "</i>")
+    popup = ~paste0("<b>", nombre, "</b><br>", org, "<br>", variable, "<br><i>", localidad, "</i>")
   ) %>%
   
   # Leyenda personalizada
