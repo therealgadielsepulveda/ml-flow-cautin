@@ -27,11 +27,11 @@ ModelComparison <- function(
     NSE = apply(
       X = comparison$data %>% select(XGB, RF, LSTM),
       MARGIN = 2,
-      FUN = function (x) NSECalc(x, comparison$data$Obs)),
+      FUN = function (x) NSECalc(comparison$data$Obs, x)),
     RMSE = apply(
       X = comparison$data %>% select(XGB, RF, LSTM),
       MARGIN = 2,
-      FUN = function (x) RMSECalc(x, comparison$data$Obs))
+      FUN = function (x) RMSECalc(comparison$data$Obs, x))
   )
   
   if (save == TRUE) {
