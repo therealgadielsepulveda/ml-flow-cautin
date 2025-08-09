@@ -33,8 +33,8 @@ ui <- fluidPage(
         tabPanel(
           title = "Métricas",
           includeHTML("html_content/metrics.html"),
-          plotOutput(outputId = "NSEPlot"),
-          plotOutput(outputId = "RMSEPlot")
+          plotOutput(outputId = "NSEPlot", height = "600px"),
+          plotOutput(outputId = "RMSEPlot", height = "600px")
         ),
         
         # Descripción de las variables y estaciones.

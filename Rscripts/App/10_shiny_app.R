@@ -4,11 +4,14 @@
 library(bslib) # Carga de temas personalizados
 library(shiny) # Interfaz y lógica de servidor
 
-library(tidyverse) # Manipulación de datos
+library(tidyverse) # Manipulación de datos y el pipe operator
 library(xts)
 
 library(viridisLite) # Colores
 library(rmarkdown) # Reportes automáticos
+library(scales)
+library(stringi)
+
 library(conflicted) # Resolución de conflictos entre paquetes
 
 # Mapa interactivo
@@ -17,9 +20,8 @@ library(sf)
 library(terra)
 
 # ---
-
-Sys.setlocale(category = "LC_TIME", locale = "es_ES.UTF-8")
 appdir <- getwd()
+Sys.setlocale("LC_ALL", "es_ES.UTF8")
 
 # Resolución de conflictos de funciones.
 conflicts_prefer(zoo::index)

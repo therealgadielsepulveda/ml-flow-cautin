@@ -67,54 +67,72 @@ server <- function(input, output) {
     return(wide_df)
   })
   
+  # MÉTRICAS LOCALES
+  # Se obtienen las métricas por argumento.
+  # Si no se elige ningún modelo, se usa NULL para no generar gráficos.
   FilteredMetrics <- reactive({
     req(is_valid_range())
-    # Obtención de dataframe ancho.
-    wide_df <- FilteredData()
-    
-    # CÁLCULO DE MÉTRICAS DE ERROR
-    NSEs <- sapply(
-      X = input$series,
-      FUN = function(x) {
-        return(NSECalc(wide_df$Obs, wide_df[[x]]))
-      }
-    )
-    
-    RMSEs <- sapply(
-      X = input$series,
-      FUN = function(x) {
-        return(RMSECalc(wide_df$Obs, wide_df[[x]]))
-      }
-    )
-    
-    # Dato de métricas locales.
-    local_metrics <- tibble(
-      Modelo = input$series,
-      RMSE = RMSEs,
-      NSE = NSEs,
-      Intervalo = "Elegido"
-    ) %>% 
-      pivot_longer(cols = any_of(c("RMSE", "NSE")), names_to = "Métrica", values_to = "Valor")
-    
-    return(local_metrics)
+    print(input$series)
+    print(class(input$series))
+    # Se calcula sólo si se escogieron modelos.
+    if(length(input$series) > 0){
+      
+      # Obtención de dataframe ancho.
+      wide_df <- FilteredData()
+      
+      # CÁLCULO DE MÉTRICAS DE ERROR
+      NSEs <- sapply(
+        X = input$series,
+        FUN = function(x) {
+          return(NSECalc(wide_df$Obs, wide_df[[x]]))
+        }
+      )
+      
+      RMSEs <- sapply(
+        X = input$series,
+        FUN = function(x) {
+          return(RMSECalc(wide_df$Obs, wide_df[[x]]))
+        }
+      )
+      
+      # Dato de métricas locales.
+      local_metrics <- tibble(
+        Modelo = input$series,
+        RMSE = RMSEs,
+        NSE = NSEs,
+        Intervalo = "Elegido"
+      ) %>% 
+        pivot_longer(cols = any_of(c("RMSE", "NSE")), names_to = "Métrica", values_to = "Valor")
+      
+      return(local_metrics)
+    } else {
+      return(NULL)
+    }
     
   })
   
   AllMetrics <- reactive({
+    
     req(is_valid_range())
     # Carga de métricas locales
     local_metrics <- FilteredMetrics()
     
-    # Llamado de métricas obtenidas para el intervalo completo.
-    complete_metrics <- comparison$metrics %>% 
-      mutate(Modelo = c("XGB", "RF", "LSTM"), Intervalo = rep("Completo",3)) %>% 
-      select(-tags) %>%
-      filter(is.element(Modelo, set = input$series)) %>% 
-      pivot_longer(cols = c(RMSE, NSE), names_to = "Métrica", values_to = "Valor")
-    
-    metrics <- bind_rows(local_metrics, complete_metrics)
-    
-    return(metrics)
+    # Se produce sólo si hay métricas locales.
+    if(!is.null(local_metrics)) {
+      # Llamado de métricas obtenidas para el intervalo completo.
+      complete_metrics <- comparison$metrics %>% 
+        mutate(Modelo = c("XGB", "RF", "LSTM"), Intervalo = rep("Completo",3)) %>% 
+        select(-tags) %>%
+        filter(is.element(Modelo, set = input$series)) %>% 
+        pivot_longer(cols = c(RMSE, NSE), names_to = "Métrica", values_to = "Valor")
+      
+      metrics <- bind_rows(local_metrics, complete_metrics)
+      
+      return(metrics)
+    } else {
+      return(NULL)
+    }
+   
   })
   
   # Dataframe para gráfico de series.
@@ -132,7 +150,8 @@ server <- function(input, output) {
   # GRÁFICO DE SERIES TEMPORALES
   # Este permite comparar los valores de la serie observada
   # con cada una de las simulaciones realizadas.
-  output$tsPlot <- renderPlot({
+  output$tsPlot <- renderPlot(
+    expr = {
     req(is_valid_range())
     # Datos procesados acorde a las necesidades del gráfico.
     df_plot <- DataForPlot()
@@ -144,10 +163,19 @@ server <- function(input, output) {
       lw = 1.2
     )
     obsplot
-  })
+  },
+  res = 72
+  )
   
-  output$statPlot <- renderPlot({
+  # GRÁFICO DE MÉTRICAS DE ERROR
+  # Este compara el valor de la métrica de error entre los modelos seleccionados (si los hay),
+  # comparando el intervalo completo con el rango de fechas seleccionado.
+  output$statPlot <- renderPlot(
+    
+    expr = {
+    
     req(is_valid_range())
+      
     df_plot <- DataForPlot()
     series_boxplot <- BoxPlot(
       data = df_plot,
@@ -156,7 +184,10 @@ server <- function(input, output) {
       font_size = 18
     )
     series_boxplot
-  })
+
+  },
+  res = 72
+  )
   
   
   # GRÁFICOS DE MÉTRICAS
@@ -168,17 +199,23 @@ server <- function(input, output) {
   output$NSEPlot <- renderPlot({
     req(is_valid_range())
     metrics <- AllMetrics()
-    nseplot <- MetricPlot(
-      data = metrics,
-      metric = "NSE",
-      font_type = "Fira Sans",
-      font_size = 18,
-      color_begin = 0.6,
-      color_end = 0.8,
-      tag_size = 6
-    )
-    nseplot
     
+    if(!is.null(AllMetrics())) {
+      nseplot <- MetricPlot(
+        data = metrics,
+        metric = "NSE",
+        font_type = "Fira Sans",
+        font_size = 18,
+        color_begin = 0.6,
+        color_end = 0.8,
+        tag_size = 6
+      )
+      nseplot
+    } else {
+      ggplot() +
+        labs(title = "Advertencia", subtitle = "Ningún modelo seleccionado") +
+        theme_minimal(base_size = 18, base_family = "Fira Sans")
+    }
   })
   
   
@@ -186,16 +223,23 @@ server <- function(input, output) {
   output$RMSEPlot <- renderPlot({
     req(is_valid_range())
     metrics <- AllMetrics()
-    rmseplot <- MetricPlot(
-      data = metrics,
-      metric = "RMSE",
-      font_type = "Fira Sans",
-      font_size = 18,
-      color_begin = 0.2,
-      color_end = 0.4,
-      tag_size = 6
-    )
-    rmseplot
+    
+    if(!is.null(AllMetrics())) {
+      rmseplot <- MetricPlot(
+        data = metrics,
+        metric = "RMSE",
+        font_type = "Fira Sans",
+        font_size = 18,
+        color_begin = 0.2,
+        color_end = 0.4,
+        tag_size = 6
+      )
+      rmseplot
+    } else {
+      ggplot() +
+        labs(title = "Advertencia", subtitle = "Ningún modelo seleccionado") +
+        theme_minimal(base_size = 18, base_family = "Fira Sans")
+    }
     
   })
   

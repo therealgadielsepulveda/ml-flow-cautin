@@ -15,7 +15,6 @@ library(knitr)
 
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.height = 4)
 
-Sys.setlocale(category = "LC_TIME", locale = "es_ES.UTF-8")
 tempdir <- getwd()
 
 setwd(params$dir)
@@ -75,11 +74,12 @@ if (knitr::is_latex_output()) cat("\\newpage\n")
 ## Métricas de evaluación
 Se presentan las métricas de evaluación de desempeño de cada modelo, en el intervalo seleccionado, en comparación con el intervalo completo.
 
-```{r}
+```{r, results='asis'}
 
     metrics <- params$metrics
     
-    nseplot <- MetricPlot(
+    if(!is.null(metrics)) {
+      nseplot <- MetricPlot(
        data = metrics,
       metric = "NSE",
       font_type = "Times",
@@ -87,8 +87,8 @@ Se presentan las métricas de evaluación de desempeño de cada modelo, en el in
       color_begin = 0.6,
       color_end = 0.8,
       tag_size = 4
-    )
-    nseplot
+      )
+      nseplot
     
     rmseplot <- MetricPlot(
        data = metrics,
@@ -98,8 +98,12 @@ Se presentan las métricas de evaluación de desempeño de cada modelo, en el in
       color_begin = 0.2,
       color_end = 0.4,
       tag_size = 4
-    )
-    rmseplot
+      )
+      rmseplot
+    } else {
+      if(knitr::is_latex_output()) cat("\\textbf{Observación:} No se seleccionó ningún modelo.")
+    }
+    
     
 ```
 
