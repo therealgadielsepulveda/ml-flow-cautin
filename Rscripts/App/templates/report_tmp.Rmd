@@ -1,0 +1,126 @@
+---
+title: "Comparación de valores de caudal observados y simulados, estación Río Cautín en Cajón"
+output: pdf_document
+params:
+  dir: NA
+  dates: NA
+  wide_df: NA
+  long_df: NA
+  metrics: NA
+---
+
+```{r, echo = FALSE, results = "hide"}
+library(tidyverse)
+library(knitr)
+
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.height = 4)
+
+tempdir <- getwd()
+
+setwd(params$dir)
+source("functions/graphic_generators.R", local = TRUE, echo = FALSE)
+setwd(tempdir)
+
+```
+
+## Descripción
+
+El siguiente documento presenta una comparación entre la serie observada del caudal instantáneo, en m³/s, en la estación fluviométrica Río Cautín en Cajón con las series simuladas por los modelos en el intervalo entre `r min(params$dates)` y `r max(params$dates)`, en la zona horaria UTC, como parte del proyecto "Uso de modelos de aprendizaje automático para la simulación de caudales en el Río Cautín a través de R".
+
+Se manejan las siglas **Obs** para la serie observada, **RF** para la serie simulada con Random Forest, **XGB** para la serie simulada con XGBoost, y **LSTM** para la serie simulada con LSTM.
+
+```{r, results='asis', echo=FALSE}
+# Se introduce salto de página de forma segura.
+if (knitr::is_latex_output()) cat("\\newpage\n")
+```
+
+## Comparación de series
+
+```{r}
+
+    # Datos procesados acorde a las necesidades del gráfico.
+    df_plot <- params$long_df
+    
+    obsplot <- ComparisonPlot(
+      data = df_plot,
+      range = params$dates,
+      font_type = "Times",
+      font_size = 12,
+      lw = 0.8
+    )
+    
+    obsplot
+```
+
+```{r}
+
+    df_plot <- params$long_df
+    # Gráfico de medidas de tendencia central
+    statplot <- BoxPlot(
+      data = df_plot,
+      range = params$dates,
+      font_type = "Times",
+      font_size = 12
+    )
+    statplot
+
+```
+
+```{r, results='asis', echo=FALSE}
+# Se introduce salto de página de forma segura.
+if (knitr::is_latex_output()) cat("\\newpage\n")
+```
+
+## Métricas de evaluación
+Se presentan las métricas de evaluación de desempeño de cada modelo, en el intervalo seleccionado, en comparación con el intervalo completo.
+
+```{r, results='asis'}
+
+    metrics <- params$metrics
+    
+    if(!is.null(metrics)) {
+      nseplot <- MetricPlot(
+       data = metrics,
+      metric = "NSE",
+      font_type = "Times",
+      font_size = 12,
+      color_begin = 0.6,
+      color_end = 0.8,
+      tag_size = 4
+      )
+      nseplot
+    
+    rmseplot <- MetricPlot(
+       data = metrics,
+      metric = "RMSE",
+      font_type = "Times",
+      font_size = 12,
+      color_begin = 0.2,
+      color_end = 0.4,
+      tag_size = 4
+      )
+      rmseplot
+    } else {
+      if(knitr::is_latex_output()) cat("\\textbf{Observación:} No se seleccionó ningún modelo.")
+    }
+    
+    
+```
+
+```{r, results='asis', echo=FALSE}
+# Se introduce salto de página de forma segura.
+if (knitr::is_latex_output()) cat("\\newpage\n")
+```
+
+## Series completas
+A continuación, se presenta el listado completo de observaciones dentro del rango de fechas seleccionado:
+
+```{r}
+
+    params$wide_df %>%
+      kable(
+        caption = "Valores observados contra simulados",
+        digits = 4
+        )
+
+```

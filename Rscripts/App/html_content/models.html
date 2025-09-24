@@ -1,0 +1,30 @@
+<p>
+Esta sección describe brevemente cada uno de los modelos comparados.
+Una explicación más formal y detallada se puede hallar en los artículos citados.
+</p>
+
+<h3>XGBoost</h3>
+
+<p>
+Este es un modelo basado en árboles de decisión, presentado por Chen y Guestrin (2016).
+Su entrenamiento de realiza de forma aditiva al combinar varios modelos débiles en un modelo más robusto. 
+Este ha demostrado una alta efectividad en campos tan diversos como detección de movimiento, predicción de comportamiento de usuario y clasificación de textos web.
+Para este proyecto, se usó una implementación en R basada en el paquete XGBoost (Chen et al., 2025).
+</p>
+
+<h3>Random Forest</h3>
+
+<p>
+Propuesto por Leo Breiman (2001), este es otro modelo basado en arboles de decisión.
+Utiliza un conjunto de árboles de decisión, donde cada uno recoge una muestra aleatoria de los datos de entrenamiento, y, finalmente, se obtiene un valor promedio a partir de todos los árboles, en el caso de problemas de regresión como este.
+Se implementó en R a través del paquete randomForest (Liaw y Wiener, 2002).
+</p>
+
+<h3>LSTM</h3>
+
+<p>
+LSTM es un acrónimo en inglés, para <i>Long Short-Term Memory</i>, que se traduce a "memoria larga a corto plazo".
+La arquitectura de este modelo está basada en redes neuronales recurrentes, como plantean Hochreiter y Schmidhuber (1997), de modo que puede utilizar datos sucesivos en una serie temporal para producir predicciones de datos siguientes.
+A diferencia de las redes neuronales recurrentes básicas, sin embargo, este recoge información tanto a corto como largo plazo con el fin de evitar los problemas del desvanecimiento de gradiente o el gradiente explosivo.
+La implementación de este modelo en R se consiguió a través del empleo de los paquetes torch (Falbel y Luraschi, 2025) y luz (Falbel, 2023).
+</p>

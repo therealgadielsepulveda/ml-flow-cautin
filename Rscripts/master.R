@@ -41,7 +41,8 @@ library(terra)
 # CAMBIO DE DIRECTORIO DE TRABAJO
 # Ajuste el directorio de trabajo local aquí.
 # Debe ser la ruta absoluta al directorio del proyecto en el equipo.
-setwd("/Users/gadielsepulveda/Documents/ml-flow-cautin")
+#setwd("/Users/gadielsepulveda/Documents/ml-flow-cautin")
+setwd("C:/Users/Usuario Dell/Documents/ml-flow-cautin")
 work_dir <- getwd()
 # ---
 
@@ -174,7 +175,7 @@ TableToLaTeX(comparison$metrics, "Resultados/Tablas/metr.tex")
 TableToLaTeX(highlights$Num, "Resultados/Tablas/num.tex")
 TableToLaTeX(highlights$Cat, "Resultados/Tablas/cat.tex")
 
-saveRDS(comparison, "Rscripts/App/comparison.rds")
+saveRDS(comparison, "Rscripts/App/data/comparison.rds")
 # PROCESO:
 # Implementación de aplicación web
 # Esto abrirá una implementación local de la aplicación.
